@@ -1,0 +1,78 @@
+You can now view travelagency-frontend in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://192.168.1.129:3000
+
+//-------------------------------------------------------------------------------------------
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@ SUPER ADMIN AND USER SESSION STORAGE ACCESS ON CERTAIN PAGES @@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+The implementation uses a simple mechanism involving session storage to determine user access
+to different parts of your application. Let’s break down how the access control works for both
+the BookTours component and the AdminDashboard component.
+
+
+---=== 1. BookTours Component ===---
+-Access Control Logic:
+    -Session Storage Check:
+        -The BookTours component checks for a user session by looking for a user
+        object in session storage. If it does not find one, it displays an error
+        message indicating that the user must be logged in to book a tour.
+    -Flow:
+        -When the BookTours component mounts (when the user navigates to this page), it runs the useEffect hook.
+        -Inside this hook, it attempts to retrieve the user object from session storage.
+        -If the user object does not exist (indicating the user is not logged in), it sets an
+        error message: "Log in as user in order to book a tour."
+        -If the user is found, the component fetches the available tours and allows the user
+        to select and book a tour.
+
+-Booking Process:
+    -The user fills out a booking form, which includes their details (first name, last name, age,
+    email, and mobile number). When the form is submitted, it checks again to ensure the user
+    is logged in before processing the booking request.
+
+------------------------------------------------------------------------
+
+---=== 2. AdminDashboard Component ===---
+-Access Control Logic:
+    -Superadmin Session Check:
+        -The AdminDashboard component checks for a superadmin object in session storage.
+        If it cannot find this object, it displays an error message indicating that the
+        user must log in as a superadmin to access the admin dashboard.
+    -Flow:
+         -When the AdminDashboard component mounts, it runs the useEffect hook, which checks for
+         the presence of a superadmin object in session storage.
+         -If no superadmin object is found, it sets an error message: "Log in as superadmin to
+         access the admin dashboard."
+         -If the superadmin is found, it displays the links to manage different entities (users, hotels, etc.).
+
+------------------------------------------------------------------------
+Summary of Access Control
+
+User Access to Book Tours:
+    Requirement: The user must be logged in (with a user object in session storage).
+    Error Message: If not logged in, an error message prompts them to log in as a user.
+    Functionality: The user can view and book tours only when logged in.
+
+Superadmin Access to Admin Dashboard:
+    Requirement: The superadmin must be logged in (with a superadmin object in session storage).
+    Error Message: If not logged in, an error message prompts them to log in as a superadmin.
+    Functionality: The superadmin can manage users, hotels, and other entities only when logged in.
+
+------------------------------------------------------------------------
+Benefits of This Approach
+
+-Separation of Concerns:
+    -By using different session storage keys for users and superadmins,
+    you maintain clear separation between the roles.
+-User Feedback:
+    -Error messages provide immediate feedback to the user
+    about what is required to gain access.
+-Simple Logic:
+    -The logic is straightforward and easy to maintain, making it clear how
+    access control is managed in your application.

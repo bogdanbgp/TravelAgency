@@ -1,0 +1,223 @@
+/* Home container styles */
+.home-container {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header section */
+.home-header {
+  text-align: center;
+  background: linear-gradient(45deg, #1abc9c, #f1c40f); /* Parrot-inspired bright green and yellow */
+  color: white;
+  padding: 40px 20px;
+  border-radius: 10px;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-header h1 {
+  font-size: 3em;
+  margin: 0;
+}
+
+.home-header p {
+  font-size: 1.2em;
+  margin: 0;
+  margin-top: 10px;
+}
+
+.explore-tours-button {
+  background-color: #e74c3c; /* Parrot-inspired bright red */
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.explore-tours-button:hover {
+  background-color: #3498db; /* Parrot-inspired bright blue for hover effect */
+  transform: scale(1.05);
+}
+
+/* Featured tours section */
+.home-featured-tours {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.home-featured-tours h2 {
+  font-size: 2.5em;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+.tour-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tour-item {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 10px;
+  width: 30%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tour-item h3 {
+  color: #27ae60; /* Parrot-inspired green */
+  font-size: 1.8em;
+  margin-bottom: 15px;
+}
+
+.tour-item p {
+  color: #7f8c8d;
+  font-size: 1em;
+  margin-bottom: 20px;
+}
+
+.view-tour-button {
+  background-color: #e74c3c; /* Parrot-inspired bright red */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.view-tour-button:hover {
+  background-color: #3498db; /* Parrot-inspired blue hover effect */
+}
+
+.tour-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Testimonials section */
+.home-testimonials {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.home-testimonials h2 {
+  font-size: 2.5em;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+.testimonial-item {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  margin: 20px auto;
+  font-style: italic;
+  max-width: 600px;
+}
+
+.testimonial-item p {
+  margin: 15px 0;
+  font-size: 1.1em;
+  color: #555;
+}
+
+.testimonial-item span {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #e74c3c; /* Parrot-inspired red for author name */
+}
+
+/* Consultation section */
+.home-consultation {
+  text-align: center;
+  background-color: #f9f9f9; /* Updated to match testimonials */
+  padding: 40px 20px;
+  border-radius: 10px;
+  margin-bottom: 50px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+}
+
+.home-consultation h2 {
+  font-size: 2.5em;
+  color: #2c3e50; /* Darker text for contrast */
+  margin-bottom: 20px;
+}
+
+.home-consultation p {
+  font-size: 1.2em;
+  color: #7f8c8d; /* Lighter text color */
+  margin: 10px auto;
+  max-width: 600px; /* Same max width as testimonial */
+}
+
+.contact-button {
+  background-color: #f1c40f; /* Parrot-inspired yellow */
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.contact-button:hover {
+  background-color: #3498db; /* Parrot-inspired blue hover effect */
+  transform: scale(1.05);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .tour-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tour-item {
+    width: 100%;
+  }
+
+  .testimonial-item {
+    width: 90%;
+  }
+
+  .home-header h1 {
+    font-size: 2em;
+  }
+
+  .home-header p {
+    font-size: 1em;
+  }
+
+  .explore-tours-button {
+    padding: 10px 20px;
+    font-size: 1em;
+  }
+
+  .home-consultation h2 {
+    font-size: 2em;
+  }
+
+  .home-consultation p {
+    font-size: 1em;
+  }
+
+  .contact-button {
+    padding: 10px 20px;
+  }
+}

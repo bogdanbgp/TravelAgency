@@ -1,0 +1,122 @@
+/* BookTours.css */
+.book-tours-container {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    padding: 20px;
+    max-width: 1200px; /* Increased max-width for better layout */
+    margin: 0 auto;
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+/* Featured tours section */
+.featured-tours-section {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.tour-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between tour items */
+}
+
+.tour-item {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 10px;
+    width: 300px; /* Fixed width for better alignment */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tour-item h3 {
+    color: #27ae60; /* Dark green for titles */
+    font-size: 1.6em;
+    margin-bottom: 10px;
+}
+
+.tour-item p {
+    color: #7f8c8d;
+    font-size: 1em;
+    margin-bottom: 15px;
+}
+
+.select-tour-button {
+    background-color: #e74c3c; /* Bright red */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.select-tour-button:hover {
+    background-color: #3498db; /* Bright blue on hover */
+}
+
+.tour-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+/* Booking form */
+.booking-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px; /* Spacing above the form */
+    padding: 20px; /* Padding for the form */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fefefe; /* Slightly off-white background */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.booking-form input {
+    margin: 10px 0;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px; /* Increased font size for better readability */
+}
+
+.submit-button {
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    font-size: 18px; /* Increased font size for better readability */
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.submit-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.success-message {
+    color: green;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .tour-item {
+        width: 90%; /* Full width on small screens */
+    }
+}

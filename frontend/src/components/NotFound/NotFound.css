@@ -1,0 +1,42 @@
+/* Container styling for NotFound component */
+.notfound-container {
+  text-align: center;
+  padding: 50px;
+  background-color: #f2f2f2; /* Soft light gray background */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Heading styling */
+.notfound-container h1 {
+  font-size: 3em;
+  color: #e74c3c; /* Bold red for error message */
+  margin-bottom: 20px;
+}
+
+/* Paragraph styling */
+.notfound-container p {
+  font-size: 1.5em;
+  color: #555; /* Darker gray for text */
+  margin-bottom: 30px;
+}
+
+/* Return to home button styling (optional) */
+.return-home-button {
+  background-color: #3498db; /* Blue background for button */
+  color: #fff;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+.return-home-button:hover {
+  background-color: #2980b9; /* Darker blue on hover */
+}

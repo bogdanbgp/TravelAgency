@@ -1,0 +1,93 @@
+/* General body styles */
+body {
+  background-color: #2a2a3c; /* Dark background for the entire body */
+}
+
+/* Admin Dashboard container styles */
+.admin-dashboard {
+  font-family: 'Arial', sans-serif; /* Consistent font family */
+  padding: 20px;
+  background: transparent; /* Transparent background for the container */
+  color: #333; /* Dark text color for better readability */
+  max-width: 800px;
+  margin: 20px auto; /* Center the dashboard with some margin */
+  text-align: center; /* Centered text alignment */
+}
+
+/* Dashboard box styles */
+.admin-dashboard-box {
+  background-color: #ffffff; /* White background for the box */
+  padding: 30px; /* Padding inside the box */
+  border-radius: 10px; /* Rounded corners for a soft look */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
+}
+
+/* Dashboard title styles */
+.admin-dashboard-box h1 {
+  font-size: 2.5em; /* Increased font size for the title */
+  margin: 0; /* Remove default margin to improve centering */
+  color: #333; /* Dark color for the title */
+}
+
+/* List styles */
+.admin-dashboard-box ul {
+  list-style: none; /* Remove default list styling */
+  padding: 0; /* Remove default padding */
+}
+
+/* List item styles */
+.admin-dashboard-box li {
+  margin: 15px 0; /* Space between list items */
+}
+
+/* Link styles */
+.admin-dashboard-box a {
+  display: inline-block; /* Make the link appear as a block element */
+  background-color: #ff5733; /* Coral Red */
+  color: white; /* White text color for contrast */
+  text-decoration: none; /* Remove underline from links */
+  padding: 12px 24px; /* Add padding for a button-like appearance */
+  font-size: 1.2em; /* Font size for the links */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for button effect */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effects */
+}
+
+/* Hover effect for links */
+.admin-dashboard-box a:hover {
+  background-color: #007acc; /* Enchanted blue reminiscent of spells and magic */
+  color: white; /* Keep text white on hover */
+  transform: scale(1.05); /* Slightly enlarge button on hover */
+}
+
+/* Alternate Color Variations */
+
+/* Option 1: Tropical Orange Button with Deep Sea Blue Hover */
+.admin-dashboard-box a.tropical-orange {
+  background-color: #ff8c00; /* Tropical Orange */
+  color: white; /* White text color */
+}
+
+.admin-dashboard-box a.tropical-orange:hover {
+  background-color: #005f73; /* Deep Sea Blue hover */
+}
+
+/* Option 2: Electric Blue Button with Purple Hover */
+.admin-dashboard-box a.electric-blue {
+  background-color: #00bfff; /* Electric Blue */
+  color: white; /* White text color */
+}
+
+.admin-dashboard-box a.electric-blue:hover {
+  background-color: #4b0082; /* Purple hover */
+}
+
+/* Option 3: Vibrant Green Button with Dark Green Hover */
+.admin-dashboard-box a.vibrant-green {
+  background-color: #32cd32; /* Vibrant Green */
+  color: white; /* White text color */
+}
+
+.admin-dashboard-box a.vibrant-green:hover {
+  background-color: #006400; /* Dark Green hover */
+}

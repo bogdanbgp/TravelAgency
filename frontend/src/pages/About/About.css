@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5; /* Light background color */
+}
+
+.about-container {
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    height: 100vh; /* Full height of the viewport */
+    padding: 20px; /* Padding around the container */
+    text-align: center; /* Center align text */
+}
+
+.about-box {
+    background-color: #ffffff; /* White background for the box */
+    padding: 30px; /* Padding inside the box */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    width: 90%; /* Full width on small screens */
+    max-width: 600px; /* Max width for larger screens */
+}
+
+h1 {
+    color: #333; /* Dark color for the title */
+    margin-bottom: 20px; /* Space below the title */
+    font-size: 2.5rem; /* Larger font size for the heading */
+}
+
+p {
+    max-width: 600px; /* Maximum width for the paragraph */
+    color: #444; /* Color for the paragraph text */
+    line-height: 1.6; /* Increase line height for readability */
+    font-size: 1.1rem; /* Font size for paragraph */
+    margin-bottom: 15px; /* Space below each paragraph */
+}
+
+address {
+    font-style: normal; /* Remove default italic style from address */
+    margin-top: 20px; /* Space above the address */
+    color: #555; /* Slightly lighter color for the address */
+    line-height: 1.6; /* Increase line height for readability */
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2rem; /* Responsive font size for small screens */
+    }
+
+    p {
+        font-size: 1rem; /* Responsive font size for small screens */
+    }
+}

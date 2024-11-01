@@ -1,0 +1,83 @@
+/* Register.css */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5; /* Background color for the body */
+}
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height for centering */
+}
+
+.register-form-box {
+    background-color: #ffffff; /* White background for the register box */
+    padding: 30px; /* Padding inside the register box */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    width: 90%; /* Full width on small screens */
+    max-width: 400px; /* Max width for larger screens */
+}
+
+h1 {
+    margin-bottom: 20px; /* Space between title and form */
+    color: #333; /* Dark color for the title */
+    text-align: center; /* Center align title */
+}
+
+.input-group {
+    margin-bottom: 15px; /* Space between input fields */
+}
+
+.input-group label {
+    margin-bottom: 5px; /* Space below the label */
+    display: block; /* Block display for label */
+    color: #333; /* Label color */
+}
+
+.input-group input {
+    width: 100%; /* Full width of the input group */
+    padding: 12px; /* Padding inside the input */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; /* Slightly rounded corners */
+    font-size: 16px; /* Font size for input */
+    transition: border-color 0.3s ease; /* Transition effect */
+}
+
+.input-group input:focus {
+    border-color: #007BFF; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+.submit-button {
+    width: 100%; /* Full width for the submit button */
+    padding: 12px; /* Padding inside the button */
+    background-color: #28a745; /* Primary button color */
+    color: white; /* White text color */
+    border: none; /* No border */
+    border-radius: 4px; /* Slightly rounded corners */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Transition effect */
+}
+
+.submit-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.success-message {
+    color: green; /* Success message color */
+    text-align: center; /* Center align success message */
+    margin-top: 10px; /* Margin above the success message */
+}
+
+.error-message {
+    color: red; /* Error text color */
+    text-align: center; /* Center align error message */
+    margin-top: 10px; /* Margin above the error message */
+}
+
+

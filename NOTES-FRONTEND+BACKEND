@@ -1,0 +1,211 @@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@ REACT POST-FETCH BACKEND AUTH @@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Frontend Code (React Component)
+Your React component handles user input for the login form and sends a request to the backend:
+        const handleLogin = async (e) => {
+            e.preventDefault();
+
+            try {
+              const response = await fetch('/auth/superadmin/login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+              });
+              ...
+            } catch (error) {
+              setError(error.message);
+            }
+        };
+What It Does:
+The handleLogin function is called when the login form is submitted.
+It sends a POST request to the /auth/superadmin/login endpoint with the username and password in JSON format.
+The fetch API is used to make the HTTP request, and the response is handled based on whether the login is successful or not.
+----------------------------------
+Backend Code (AuthController)
+This is the part of your backend that processes the login request:
+        @PostMapping("/superadmin/login")
+        public ResponseEntity<LoginResponse> superAdminLogin(@RequestBody LoginRequest loginRequest) {
+            ...
+            UserDetails userDetails = authService.loadUserByUsername(loginRequest.getUsername());
+            ...
+            LoginResponse response = authService.login(loginRequest);
+            return ResponseEntity.ok(response);
+        }
+What It Does:
+The superAdminLogin method handles the incoming login request from the React app.
+It checks if the username and password are provided, then uses the AuthService to load user details based on the username.
+It checks if the user has the SUPER_ADMIN role and then calls the login method in the AuthService to perform authentication and generate a token if successful.
+----------------------------------
+
+        @Override
+        public LoginResponse login(LoginRequest loginRequest) throws AuthenticationFailedException {
+            UserDetails userDetails;
+            try {
+                userDetails = customUserDetailsService.loadUserByUsername(loginRequest.getUsername());
+            } catch (UsernameNotFoundException e) {
+                throw new AuthenticationFailedException("Authentication failed: User not found.");
+            }
+
+            // Verify the password
+            if (!passwordEncoder.matches(loginRequest.getPassword(), userDetails.getPassword())) {
+                throw new AuthenticationFailedException("Authentication failed: Invalid password.");
+            }
+
+            // Generate the token using JwtUtil
+            String token = jwtUtil.generateToken(userDetails);
+            return loginMapper.toResponse(token, userDetails.getUsername());
+        }
+Retrieve User Details:
+The method begins by attempting to load the user details for the specified username from the customUserDetailsService.
+If the user cannot be found (i.e., the username does not exist in the database), it throws an AuthenticationFailedException with a message indicating that the user was not found.
+Verify Password:
+Once the user details are successfully retrieved, the method checks if the provided password (loginRequest.getPassword()) matches the password stored in the database (accessed through userDetails.getPassword()).
+The passwordEncoder.matches method is used to securely compare the raw password with the hashed password.
+If the passwords do not match, an AuthenticationFailedException is thrown, indicating an invalid password.
+Generate JWT Token:
+If the username and password are valid, a JWT (JSON Web Token) is generated using jwtUtil.generateToken(userDetails).
+This token is essential for authenticating future requests to protected resources in the application.
+Return Login Response:
+Finally, the method constructs a LoginResponse object using loginMapper.toResponse(token, userDetails.getUsername()), which includes the generated token and the username.
+This response is returned to the caller, typically the controller that initiated the login request, allowing the frontend to handle the token for subsequent authenticated requests.
+
+----------------------------------
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@ /api/users/me API @@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@ in my case, /api/user/me @@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+The endpoint "/api/users/me" is a commonly used pattern in REST APIs for retrieving the currently authenticated user's information. This design follows RESTful principles and enhances user experience by providing user-specific data seamlessly.
+
+Key Components of the Implementation
+Endpoint Structure:
+/api/: Indicates that the request pertains to an API route.
+users/: Specifies that the data being accessed is related to users.
+me: A convention used to signify that the request is for the currently authenticated user's profile. This avoids the need for explicitly specifying a user ID.
+Purpose of /api/users/me:
+This endpoint allows clients (like frontend applications) to fetch the details of the authenticated user without needing to pass additional parameters. The server can determine the user based on the authentication token included in the request headers.
+Integration with Authentication Logic
+The authentication process is essential for protecting this endpoint. Below are the relevant utility methods that handle user authentication and retrieval in a Spring Boot application:
+-----------------------------------------------------------------------------------------------------
+Utility Method to Get Current User's ID:
+        private Long getCurrentUserId() {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                return Long.parseLong(userDetails.getUsername()); // Assuming the username holds the user ID
+            }
+            throw new RuntimeException("User is not authenticated");
+        }
+                        Purpose: This method retrieves the currently authenticated user's ID. It
+                                 checks if the authentication object is not null and whether the
+                                 principal (the user details) is an instance of UserDetails. The
+                                 user ID is typically encoded in the username field for easy access.
+                                    * gets data from this class: CustomUserDetailsService *
+                        Error Handling: If the user is not authenticated, it throws a RuntimeException,
+                                        ensuring that unauthorized access is appropriately managed.
+-----------------------------------------------------------------------------------------------------
+Method to Retrieve Current User:
+        @Override
+        public User getCurrentUser() {
+            Long userId = getCurrentUserId();
+            return userRepository.findById(userId)
+                    .orElseThrow(() -> new UserNotFoundException("User not found"));
+        }
+                        Purpose: This method utilizes the getCurrentUserId() method to fetch the current user’s ID and then queries the userRepository to retrieve the user object from the database.
+                        Error Handling: If no user is found with the retrieved ID, it throws a custom UserNotFoundException, providing clear feedback when an issue arises.
+-----------------------------------------------------------------------------------------------------
+How It Works Together
+When a frontend application calls the fetchUserData function to access user information from the /api/users/me endpoint, it includes a JWT in the Authorization header. The backend uses the authentication mechanisms provided by Spring Security to decode this token and determine the authenticated user's identity.
+
+The request to http://localhost:8080/api/users/me is processed by the controller that handles this endpoint.
+Within this controller, the getCurrentUser() method is invoked.
+This method retrieves the current user ID using getCurrentUserId(), which accesses the security context.
+Finally, the user details are fetched from the database and returned in the response.
+Benefits of Using /api/users/me
+Simplified Access: Users can easily access their profile information without additional input.
+Improved Security: The server can verify user identity through the token, reducing the risk of unauthorized access.
+Consistency: Following a common pattern aids in the predictability and usability of API endpoints across different applications and services.
+
+
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@ LOGIN + LOGOUT: SESSION STORAGE @@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+### How User Login Works
+
+1. **User Input**:
+   * When a user wants to log in, they enter their **username** and **password** in the login form.
+
+2. **Sending Login Request**:
+   * When the user submits the form, your application sends a request to your server (the backend). This request includes the username and password.
+
+3. **Server Validation**:
+   * The server checks if the username and password are correct:
+     * If they are correct, the server responds with user information (like their username, user ID, etc.).
+     * If they are incorrect, the server sends back an error message.
+
+4. **Storing User Information**:
+   * If the login is successful, the application stores the user’s information in the **session storage** of the browser.
+   * **Session storage** is a place in the browser where you can temporarily save data. The data is available only as long as the browser tab is open.
+   * Example code:
+     ```javascript
+     sessionStorage.setItem('user', JSON.stringify(data)); // Save user data
+     ```
+
+5. **Setting User State**:
+   * After successfully logging in, you update the user state in your React application (using `setUser` function).
+   * This state keeps track of whether a user is logged in or not.
+
+### Identifying Logged-in Status
+
+1. **Green/Red Dot**:
+   * In your application, you might have a visual indicator (like a green dot for logged in and a red dot for logged out).
+   * This indicator can change based on whether the user state is set (logged in) or not (logged out).
+
+2. **How It Works**:
+   * You pass the logged-in status to components (like your Navbar) using props.
+   * Example:
+     ```javascript
+     <Navbar handleLogout={handleLogout} isLoggedIn={!!user} /> // Pass user status
+     ```
+   * In the Navbar, you can conditionally render the dot based on the `isLoggedIn` prop:
+     ```javascript
+     {isLoggedIn ? <span className="green-dot" /> : <span className="red-dot" />}
+     ```
+
+### Logging Out
+
+1. **Logout Process**:
+   * When a user clicks on a logout button, your application should clear the user information from the session storage and update the user state to `null`.
+   * Example code for logout:
+     ```javascript
+     const handleLogout = () => {
+       setUser(null); // Reset user state
+       sessionStorage.removeItem('user'); // Remove user data from session storage
+     };
+     ```
+
+2. **Updating the UI**:
+   * Once logged out, the Navbar will now receive `isLoggedIn` as `false`, changing the dot from green to red.
+
+### Summary
+
+* **User logs in**: Input username/password, send request to server.
+* **Server checks credentials**: If valid, respond with user data.
+* **Store user data**: Save in session storage and update state.
+* **UI updates**: Visual indicators (green/red dot) reflect the user’s logged-in status.
+* **User logs out**: Clear session storage and reset state, updating the UI accordingly.

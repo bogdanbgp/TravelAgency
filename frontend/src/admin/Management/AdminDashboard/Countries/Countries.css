@@ -1,0 +1,157 @@
+/* Countries container styles */
+.countries-container {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    padding: 20px;
+    max-width: 1200px; /* Similar to tours */
+    margin: 0 auto;
+}
+
+/* Header section */
+.countries-header {
+    text-align: center;
+    background: linear-gradient(45deg, #1abc9c, #f1c40f); /* Green and yellow gradient */
+    color: white;
+    padding: 40px 20px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+.countries-header h1 {
+    font-size: 3em;
+    margin: 0;
+}
+
+/* Country list styles */
+.user-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.user-item {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-info {
+    flex-grow: 1;
+    color: #555;
+}
+
+/* Button styles */
+.update-button,
+.delete-button,
+.submit-button {
+    background-color: #e74c3c; /* Bright red */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.update-button {
+    background-color: #3498db; /* Blue for update */
+}
+
+.update-button:hover {
+    background-color: #2980b9; /* Darker blue for hover */
+}
+
+.delete-button {
+    background-color: #dc3545; /* Bootstrap red for delete */
+}
+
+.delete-button:hover {
+    background-color: #c82333; /* Darker red for delete */
+}
+
+/* Form styles */
+.update-form {
+    background-color: #ecf0f1; /* Light background for the form */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    display: flex; /* Enable flexbox */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center items horizontally */
+}
+
+/* Input field styles */
+.form-input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 80%; /* Adjust width to fit better */
+    max-width: 400px; /* Maximum width for larger screens */
+}
+
+.form-input:focus {
+    border-color: #3498db; /* Focused input border color */
+    outline: none;
+}
+
+/* Submit button styles */
+.submit-button {
+    background-color: #e74c3c; /* Bright red */
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block; /* Make button a block element */
+    margin: 20px auto; /* Center horizontally */
+    width: 50%; /* Optional: Adjust width as needed */
+    text-align: center; /* Center text within button */
+}
+
+.submit-button:hover {
+    background-color: #c82333; /* Darker red for hover */
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.success-message {
+    color: green;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .countries-header h1 {
+        font-size: 2.5em;
+    }
+
+    .update-form {
+        padding: 15px;
+    }
+
+    .user-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .user-item button {
+        width: 100%;
+        margin-top: 10px;
+    }
+}

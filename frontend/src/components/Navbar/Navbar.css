@@ -1,0 +1,183 @@
+/* Navbar container styling */
+.navbar {
+  background-color: #005a7d; /* Soft teal color */
+  color: #ffffff; /* White text color */
+  padding: 15px 20px; /* Padding for the navbar */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Softer shadow for a cleaner look */
+  position: relative; /* Ensure popups can appear below the navbar */
+  border-radius: 0; /* Remove rounding for a sharper look */
+  display: flex; /* Use flexbox for alignment */
+  justify-content: space-between; /* Space between items */
+  align-items: center; /* Center items vertically */
+  flex-wrap: nowrap; /* Prevent wrapping on the navbar items */
+  width: 100vw; /* Full width of the viewport */
+  max-width: none; /* Remove max width restriction */
+  margin: 0; /* Remove margin for full-width effect */
+}
+
+/* Navbar links container styling */
+.navbar-links {
+  list-style: none;
+  display: flex;
+  justify-content: center; /* Center the items */
+  margin: 0;
+  padding: 0;
+  flex-grow: 1; /* Allow links to grow and take up available space */
+}
+
+/* Individual link styling */
+.navbar-links li {
+  margin: 0 15px; /* Adjust margin for better spacing */
+  position: relative; /* Position relative for popup positioning */
+}
+
+/* Link and button styling */
+.navbar-links a,
+.button {
+  color: #ffffff; /* White for text */
+  background: #008b5a; /* Soft teal color for buttons */
+  border: none;
+  padding: 10px 15px; /* Consistent padding for buttons */
+  cursor: pointer; /* Change cursor on hover */
+  font-size: 1em; /* Set font size for consistency */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none; /* No underline */
+  border-radius: 5px; /* Slight rounding for buttons */
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s; /* Smooth transitions */
+}
+
+/* Button hover effects */
+.button:hover,
+.navbar-links a:hover {
+  background: #007f5c; /* Darker teal on hover */
+  transform: translateY(-2px); /* Slight lift on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow effect on hover */
+}
+
+/* Popups should not affect the navbar size */
+.popup {
+  position: absolute; /* Absolutely position popups */
+  top: 100%; /* Position right below the button */
+  left: 0;
+  background-color: #005a7d; /* Popup background color */
+  padding: 15px;
+  border-radius: 10px; /* Rounded corners for the popup */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for the popup */
+  z-index: 1000; /* Ensure it appears above other elements */
+}
+
+/* Admin options container styling */
+.admin-options {
+  display: flex;
+  flex-direction: column; /* Stack the admin links vertically */
+  width: max-content; /* Adjust width to content */
+}
+
+/* Admin options link styling */
+.admin-options a {
+  color: #ffffff; /* White color for admin options */
+  text-decoration: none;
+  padding: 10px; /* Padding for buttons */
+  margin: 5px 0; /* Space between buttons */
+  border-radius: 4px; /* Slightly rounded corners for buttons */
+  background-color: #008b5a; /* Soft teal for admin options */
+  font-size: 1em; /* Font size for consistency */
+  display: block;
+  text-align: center; /* Center the text */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
+}
+
+/* Admin options link hover effects */
+.admin-options a:hover {
+  background-color: #007f5c; /* Darker teal on hover */
+  transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+/* Confirmation dialog styling */
+.confirmation-dialog {
+  width: max-content; /* Adjust width to content */
+  background-color: #005a7d; /* Blue background for confirmation dialog */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  text-align: center;
+  display: flex; /* Use flex for better alignment */
+  flex-direction: column; /* Stack elements vertically */
+}
+
+/* Confirmation and Cancel buttons */
+.confirm-button,
+.cancel-button {
+  background-color: #008b5a; /* Soft teal for confirm */
+  color: #ffffff; /* White text */
+  border: none;
+  border-radius: 4px; /* Slight rounding for buttons */
+  padding: 10px 15px; /* Adjusted padding for balance */
+  cursor: pointer;
+  margin: 5px; /* Margin for spacing */
+  font-size: 1em; /* Set font size for consistency */
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s; /* Add transform transition */
+  width: 80px; /* Fixed width for both buttons */
+  display: inline-block; /* Display inline-block for centering */
+}
+
+.confirm-button:hover {
+  background-color: #007f5c; /* Darker teal on hover */
+  transform: translateY(-2px); /* Slight lift effect on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Add shadow on hover */
+}
+
+.cancel-button {
+  background-color: #d88c36; /* Sunset orange for cancel */
+}
+
+.cancel-button:hover {
+  background-color: #c57d2c; /* Darker sunset orange on hover */
+  transform: translateY(-2px); /* Slight lift effect on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Add shadow on hover */
+}
+
+/* Logout confirmation message styling */
+.confirmation-dialog p {
+  color: #ffffff; /* Change the text color of the confirmation message */
+  margin-bottom: 15px; /* Space between text and buttons */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    align-items: stretch; /* Align items to stretch */
+    padding: 10px; /* Padding adjustments */
+  }
+
+  .navbar-links {
+    flex-direction: column; /* Stack links vertically */
+    align-items: center; /* Center items on smaller screens */
+    width: 100%; /* Full width for links */
+  }
+
+  .navbar-links li {
+    margin: 5px 0; /* Adjust margin for better spacing */
+    width: 100%; /* Full width for list items */
+    text-align: center; /* Center the text */
+  }
+
+  .button,
+  .admin-options a {
+    width: 100%; /* Full width buttons */
+  }
+}
+
+/* Status Indicator Dot */
+.status-indicator {
+  width: 12px; /* Adjust the size of the dot */
+  height: 12px;
+  border-radius: 50%; /* Make it circular */
+  margin-left: 10px; /* Space between the dot and the links */
+  margin-right: 5px; /* Increase the space between the dot and the username */
+  margin-top: 3px; /* Dot position on the Y-axis */
+  display: inline-block; /* Keep it inline with the links */
+}
