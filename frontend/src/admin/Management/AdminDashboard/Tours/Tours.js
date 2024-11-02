@@ -205,9 +205,8 @@ const Tours = () => {
   return (
     <div className="tours-container">
       <div className="tours-header">
-        <h1>Tours Management</h1>
+        <h1>Manage Tours</h1>
       </div>
-
       {/* Tours List */}
       <h2>Tour List</h2>
       <ul className="tour-list">

@@ -102,7 +102,9 @@ const Cities = () => {
 
     return (
         <div className="cities-container">
-            <h1>Manage Cities</h1>
+         <div className="cities-header">
+             <h1>Manage Cities</h1>
+         </div>
             <form className="add-city-form" onSubmit={addOrUpdateCity}>
                 <input
                     type="text"

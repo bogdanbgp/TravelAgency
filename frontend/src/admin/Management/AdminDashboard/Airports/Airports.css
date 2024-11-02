@@ -7,14 +7,19 @@
     margin: 0 auto;
 }
 
-/* Header styles */
-.airports-container h1 {
+/* Header section - Unified style */
+.airports-header {
     text-align: center;
     background: linear-gradient(45deg, #1abc9c, #f1c40f); /* Green and yellow gradient */
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 2.5em;
+    color: white;
+    padding: 40px 20px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+.airports-header h1 {
+    font-size: 3em;
+    margin: 0;
 }
 
 /* Form styles */

@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import './Airports.css'; // Import the CSS file
+import './Airports.css';
 
 const Airports = () => {
     const [airports, setAirports] = useState([]);
     const [newAirportName, setNewAirportName] = useState("");
     const [cityId, setCityId] = useState("");
     const [editingAirportId, setEditingAirportId] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(""); // State for error message
-    const [successMessage, setSuccessMessage] = useState(""); // State for success message
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
 
-    // Fetch all airports when the component mounts
     useEffect(() => {
         fetchAirports();
     }, []);
 
-    // Function to fetch airports from the backend (GET)
     const fetchAirports = async () => {
         try {
             const response = await fetch('http://localhost:8080/api/admin/airports', { method: 'GET' });
@@ -28,7 +26,6 @@ const Airports = () => {
         }
     };
 
-    // Function to add or update an airport (POST/PUT)
     const addOrUpdateAirport = async (event) => {
         event.preventDefault();
         const airportData = { airportName: newAirportName, cityId };
@@ -47,14 +44,13 @@ const Airports = () => {
                 });
 
             if (!response.ok) {
-                // Check for specific error response
                 if (response.status === 404) {
                     setErrorMessage("City not found. Please enter a valid city ID.");
                 } else {
                     throw new Error(editingAirportId ? 'Failed to update airport' : 'Failed to create airport');
                 }
-                setSuccessMessage(""); // Clear success message on error
-                return; // Exit the function if there was an error
+                setSuccessMessage("");
+                return;
             }
 
             const newAirport = await response.json();
@@ -62,23 +58,21 @@ const Airports = () => {
                 ? airports.map(airport => (airport.id === editingAirportId ? newAirport : airport))
                 : [...airports, newAirport]);
             resetForm();
-            setErrorMessage(""); // Clear error message on success
-            setSuccessMessage(editingAirportId ? 'Airport updated successfully!' : 'Airport added successfully!'); // Set success message
+            setErrorMessage("");
+            setSuccessMessage(editingAirportId ? 'Airport updated successfully!' : 'Airport added successfully!');
         } catch (error) {
             console.error('Error adding/updating airport:', error);
         }
     };
 
-    // Function to handle editing an airport
     const handleEdit = (airport) => {
         setNewAirportName(airport.airportName);
         setCityId(airport.cityId);
         setEditingAirportId(airport.id);
-        setErrorMessage(""); // Clear any previous error message
-        setSuccessMessage(""); // Clear any previous success message
+        setErrorMessage("");
+        setSuccessMessage("");
     };
 
-    // Function to delete an airport (DELETE)
     const handleDelete = async (airportId) => {
         try {
             const response = await fetch(`http://localhost:8080/api/admin/airports/${airportId}`, { method: 'DELETE' });
@@ -91,18 +85,19 @@ const Airports = () => {
         }
     };
 
-    // Function to reset the form
     const resetForm = () => {
         setNewAirportName("");
         setCityId("");
         setEditingAirportId(null);
-        setSuccessMessage(""); // Clear success message
-        setErrorMessage(""); // Clear error message on reset
+        setSuccessMessage("");
+        setErrorMessage("");
     };
 
     return (
         <div className="airports-container">
-            <h1>Manage Airports</h1>
+            <div className="airports-header">
+                <h1>Manage Airports</h1>
+            </div>
             <form className="add-airport-form" onSubmit={addOrUpdateAirport}>
                 <input
                     type="text"
@@ -124,8 +119,8 @@ const Airports = () => {
                     {editingAirportId ? 'Update Airport' : 'Add Airport'}
                 </button>
             </form>
-            {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Centered error message */}
-            {successMessage && <div className="success-message" style={{ color: 'green' }}>{successMessage}</div>} {/* Success message */}
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
+            {successMessage && <div className="success-message" style={{ color: 'green' }}>{successMessage}</div>}
             <h2>Airport List</h2>
             <ul className="airport-list">
                 {airports.map((airport) => (

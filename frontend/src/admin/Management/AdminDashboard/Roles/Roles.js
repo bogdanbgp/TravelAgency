@@ -112,7 +112,20 @@ const Roles = () => {
 
     return (
         <div className="roles-container">
-            <h1>Manage Roles</h1>
+            <div className="roles-header">
+                <h1>Manage Roles</h1>
+            </div>
+
+            <h2>Role List</h2>
+            <ul className="role-list">
+                {roles.map((role) => (
+                    <li key={role.id} className="role-item">
+                        <span className="role-info">{role.roleName}</span>
+                        <button onClick={() => handleEdit(role)} className="update-button">Edit</button>
+                        <button onClick={() => handleDelete(role.id)} className="delete-button">Delete</button>
+                    </li>
+                ))}
+            </ul>
 
             <form onSubmit={addOrUpdateRole} className="update-form">
                 <input
@@ -130,17 +143,6 @@ const Roles = () => {
 
             {errorMessage && <div className="error-message" style={{ color: 'red' }}>{errorMessage}</div>}
             {successMessage && <div className="success-message" style={{ color: 'green' }}>{successMessage}</div>}
-
-            <h2>Role List</h2>
-            <ul className="role-list">
-                {roles.map((role) => (
-                    <li key={role.id} className="role-item">
-                        <span className="role-info">{role.roleName}</span>
-                        <button onClick={() => handleEdit(role)} className="update-button">Edit</button>
-                        <button onClick={() => handleDelete(role.id)} className="delete-button">Delete</button>
-                    </li>
-                ))}
-            </ul>
         </div>
     );
 };
