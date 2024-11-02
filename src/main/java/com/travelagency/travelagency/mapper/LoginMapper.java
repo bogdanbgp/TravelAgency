@@ -15,10 +15,9 @@ public class LoginMapper {
         user.setPassword(loginRequest.getPassword()); // Password handling can be done in the service
         return user;
     }
-
-    // Mapping from User entity to LoginResponse (after successful login)
-    public LoginResponse toResponse(User user) {
-        String message = "Login successful"; // Success message
-        return new LoginResponse(message, user.getUsername());
-    }
+                // Mapping from User entity to LoginResponse (after successful login)
+                public LoginResponse toResponse(User user) {
+                    String message = "Login successful"; // Success message
+                    return new LoginResponse(message, user.getUsername());
+                }
 }

@@ -4,15 +4,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateTourResponse {
     private Long id;
     private String tourName;
-    private String departureDate;
-    private String returnDate;
+    private LocalDate departureDate; // LocalDate
+    private LocalDate returnDate; // LocalDate
     private int numberOfDays;
     private String description;
     private double price;
+    private String fromCountry;
+    private String toCountry;
+    private String fromCity;
+    private String toCity;
+    private String fromAirport;
+    private String toAirport;
+    private String toHotel;
 }

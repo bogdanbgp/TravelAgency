@@ -19,17 +19,16 @@ public class RegisterMapper {
         user.setPassword(registerRequest.getPassword()); // Password encoding happens in the service
         return user;
     }
-
-    // Mapping from User entity to RegisterResponse (after successful registration)
-    public RegisterResponse toResponse(User user) {
-        return new RegisterResponse(
-                "Registration successful",    // Success message
-                user.getUsername(),          // Username
-                user.getFirstName(),
-                user.getLastName(),
-                user.getAge(),               // Age
-                user.getEmail(),             // Email
-                user.getMobile()            // Mobile
-        );
-    }
+                // Mapping from User entity to RegisterResponse (after successful registration)
+                public RegisterResponse toResponse(User user) {
+                    return new RegisterResponse(
+                            "Registration successful",    // Success message
+                            user.getUsername(),          // Username
+                            user.getFirstName(),
+                            user.getLastName(),
+                            user.getAge(),               // Age
+                            user.getEmail(),             // Email
+                            user.getMobile()            // Mobile
+                    );
+                }
 }

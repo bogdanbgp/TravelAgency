@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Airports.css';
+import './Airports.css'; // Import the CSS file
 
 const Airports = () => {
     const [airports, setAirports] = useState([]);
@@ -9,10 +9,12 @@ const Airports = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
 
+    // Fetch all airports when the component mounts
     useEffect(() => {
         fetchAirports();
     }, []);
 
+    // Function to fetch airports from the backend (GET)
     const fetchAirports = async () => {
         try {
             const response = await fetch('http://localhost:8080/api/admin/airports', { method: 'GET' });
@@ -26,9 +28,10 @@ const Airports = () => {
         }
     };
 
+    // Function to add or update an airport (POST/PUT)
     const addOrUpdateAirport = async (event) => {
         event.preventDefault();
-        const airportData = { airportName: newAirportName, cityId };
+        const airportData = { airportName: newAirportName || "", cityId: cityId || "" };
 
         try {
             const response = editingAirportId
@@ -65,14 +68,16 @@ const Airports = () => {
         }
     };
 
+    // Function to handle editing an airport
     const handleEdit = (airport) => {
-        setNewAirportName(airport.airportName);
-        setCityId(airport.cityId);
+        setNewAirportName(airport.airportName || ""); // Ensure default empty string
+        setCityId(airport.cityId || ""); // Ensure default empty string
         setEditingAirportId(airport.id);
         setErrorMessage("");
         setSuccessMessage("");
     };
 
+    // Function to delete an airport (DELETE)
     const handleDelete = async (airportId) => {
         try {
             const response = await fetch(`http://localhost:8080/api/admin/airports/${airportId}`, { method: 'DELETE' });
@@ -85,6 +90,7 @@ const Airports = () => {
         }
     };
 
+    // Function to reset the form
     const resetForm = () => {
         setNewAirportName("");
         setCityId("");
@@ -102,7 +108,7 @@ const Airports = () => {
                 <input
                     type="text"
                     className="form-input"
-                    value={newAirportName}
+                    value={newAirportName || ""} // Ensure controlled input
                     onChange={(e) => setNewAirportName(e.target.value)}
                     placeholder="Enter airport name"
                     required
@@ -110,7 +116,7 @@ const Airports = () => {
                 <input
                     type="text"
                     className="form-input"
-                    value={cityId}
+                    value={cityId || ""} // Ensure controlled input
                     onChange={(e) => setCityId(e.target.value)}
                     placeholder="Enter city ID"
                     required
@@ -118,6 +124,15 @@ const Airports = () => {
                 <button type="submit" className="submit-button">
                     {editingAirportId ? 'Update Airport' : 'Add Airport'}
                 </button>
+                {editingAirportId && (
+                    <button
+                        type="button"
+                        onClick={resetForm}
+                        className="cancel-button"
+                    >
+                        Cancel
+                    </button>
+                )}
             </form>
             {errorMessage && <div className="error-message">{errorMessage}</div>}
             {successMessage && <div className="success-message" style={{ color: 'green' }}>{successMessage}</div>}

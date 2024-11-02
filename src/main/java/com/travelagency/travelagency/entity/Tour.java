@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,23 @@ public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String tourName; // Tour name should be required
+
+    @Column(nullable = false)
+    private LocalDate departureDate; // Departure date is required
+
+    @Column(nullable = false)
+    private LocalDate returnDate; // Return date is required
+
+    @Column(nullable = false)
+    private int numberOfDays; // Number of days should not be null
+
+    private String description; // Description can be optional
+
+    @Column(nullable = false)
+    private double price; // Price should be required
 
     @ManyToOne // many tours from the same country
     @JoinColumn(name = "from_country_id", nullable = false)
@@ -45,22 +63,7 @@ public class Tour {
     @JoinColumn(name = "hotel_id")
     private Hotel toHotel;
 
-    @Column(nullable = false)
-    private String tourName; // Tour name should be required
-
-    @Column(nullable = false)
-    private String departureDate; // Departure date is required
-
-    @Column(nullable = false)
-    private String returnDate; // Return date is required
-
-    @Column(nullable = false)
-    private int numberOfDays; // Number of days should not be null
-
-    private String description; // Description can be optional
-
-    @Column(nullable = false)
-    private double price; // Price should be required
+    //-------------------------------------
 
     @ManyToMany(mappedBy = "tours") // Reference the tours from User
     private List<User> users = new ArrayList<>();

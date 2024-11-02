@@ -15,12 +15,11 @@ public class SuperAdminRegisterMapper {
         superAdmin.setPassword(superAdminRegisterRequest.getPassword()); // Password should be encoded later in the service layer
         return superAdmin; // Return the constructed SuperAdmin entity
     }
-
-    // Converts SuperAdmin entity to SuperAdminRegisterResponse
-    public SuperAdminRegisterResponse toResponse(SuperAdmin superAdmin) { // Change parameter type to SuperAdmin
-        return new SuperAdminRegisterResponse(
-                "Super Admin registered successfully", // Registration success message
-                superAdmin.getUsername()               // Registered username
-        );
+                // Mapping from SuperAdmin entity to SuperAdminRegisterResponse
+                public SuperAdminRegisterResponse toResponse(SuperAdmin superAdmin) { // Change parameter type to SuperAdmin
+                    return new SuperAdminRegisterResponse(
+                            "Super Admin registered successfully", // Registration success message
+                            superAdmin.getUsername()                        // Registered username
+                    );
     }
 }

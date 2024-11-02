@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,11 +38,11 @@ public class AddTourRequest {
 
     private Long hotelId; // Hotel is optional
 
-    @NotEmpty(message = "Departure date should not be empty")
-    private String departureDate;
+    @NotNull(message = "Departure date should not be null")
+    private LocalDate departureDate; // Changed to LocalDate
 
-    @NotEmpty(message = "Return date should not be empty")
-    private String returnDate;
+    @NotNull(message = "Return date should not be null")
+    private LocalDate returnDate; // Changed to LocalDate
 
     @NotNull(message = "Number of days should not be null")
     private int numberOfDays;

@@ -15,10 +15,9 @@ public class SuperAdminLoginMapper {
         superAdmin.setPassword(loginRequest.getPassword()); // Password handling (encryption) will be done in the service
         return superAdmin;
     }
-
-    // Mapping from SuperAdmin entity to SuperAdminLoginResponse (after successful login)
-    public SuperAdminLoginResponse toResponse(SuperAdmin superAdmin) {
-        String message = "SuperAdmin login successful"; // Success message
-        return new SuperAdminLoginResponse(message, superAdmin.getUsername());
-    }
-}
+                // Mapping from SuperAdmin entity to SuperAdminLoginResponse (after successful login)
+                public SuperAdminLoginResponse toResponse(SuperAdmin superAdmin) {
+                    String message = "SuperAdmin login successful"; // Success message
+                    return new SuperAdminLoginResponse(message, superAdmin.getUsername());
+                }
+            }

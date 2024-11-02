@@ -1,10 +1,11 @@
 package com.travelagency.travelagency.dto.request.tour;
 
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -13,11 +14,11 @@ public class UpdateTourRequest {
 
     private String tourName;
 
-    @NotEmpty(message = "Departure date should not be empty")
-    private String departureDate; // Changed to String for consistency
+    @NotNull(message = "Departure date should not be null")
+    private LocalDate departureDate; // Using LocalDate
 
-    @NotEmpty(message = "Return date should not be empty")
-    private String returnDate; // Changed to String for consistency
+    @NotNull(message = "Return date should not be null")
+    private LocalDate returnDate; // Using LocalDate
 
     @NotNull(message = "Number of days should not be null")
     private int numberOfDays;

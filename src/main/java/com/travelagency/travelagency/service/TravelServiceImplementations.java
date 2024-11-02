@@ -1,16 +1,31 @@
 package com.travelagency.travelagency.service;
 
 import com.travelagency.travelagency.dto.request.airport.AddAirportRequest;
+import com.travelagency.travelagency.dto.request.airport.UpdateAirportRequest;
 import com.travelagency.travelagency.dto.request.city.AddCityRequest;
+import com.travelagency.travelagency.dto.request.city.UpdateCityRequest;
 import com.travelagency.travelagency.dto.request.country.AddCountryRequest;
+import com.travelagency.travelagency.dto.request.country.UpdateCountryRequest;
 import com.travelagency.travelagency.dto.request.hotel.AddHotelRequest;
+import com.travelagency.travelagency.dto.request.hotel.UpdateHotelRequest;
 import com.travelagency.travelagency.dto.request.role.AddRoleRequest;
 import com.travelagency.travelagency.dto.request.role.AddRoleToUserRequest;
+import com.travelagency.travelagency.dto.request.role.UpdateRoleRequest;
 import com.travelagency.travelagency.dto.request.tour.AddTourRequest;
 import com.travelagency.travelagency.dto.request.tour.AddTourToUserRequest;
 import com.travelagency.travelagency.dto.request.tour.UpdateTourRequest;
 import com.travelagency.travelagency.dto.request.user.AddUserRequest;
 import com.travelagency.travelagency.dto.request.user.UpdateUserRequest;
+import com.travelagency.travelagency.dto.response.airport.AirportResponse;
+import com.travelagency.travelagency.dto.response.airport.UpdateAirportResponse;
+import com.travelagency.travelagency.dto.response.city.CityResponse;
+import com.travelagency.travelagency.dto.response.city.UpdateCityResponse;
+import com.travelagency.travelagency.dto.response.country.CountryResponse;
+import com.travelagency.travelagency.dto.response.country.UpdateCountryResponse;
+import com.travelagency.travelagency.dto.response.hotel.HotelResponse;
+import com.travelagency.travelagency.dto.response.hotel.UpdateHotelResponse;
+import com.travelagency.travelagency.dto.response.role.RoleResponse;
+import com.travelagency.travelagency.dto.response.role.UpdateRoleResponse;
 import com.travelagency.travelagency.dto.response.tour.TourResponse;
 import com.travelagency.travelagency.dto.response.tour.UpdateTourResponse;
 import com.travelagency.travelagency.dto.response.user.UpdateUserResponse;
@@ -81,15 +96,20 @@ public class TravelServiceImplementations implements TravelService {
 //-----------------------------------------------------------------------------------------------------
     // ROLE-RELATED METHODS
 
+    // Add Role
     @Override
-    public Role addRole(AddRoleRequest addRoleRequest) {
+    public RoleResponse addRole(AddRoleRequest addRoleRequest) {
         // Check if a role with the same name already exists
         Optional<Role> existingRole = roleRepository.findRoleByRoleName(addRoleRequest.getRoleName());
         if (existingRole.isPresent()) {
             throw new RoleAlreadyExistsException("A role with this name already exists");
         }
-        Role role = roleMapper.fromRequest(addRoleRequest); // Use RoleMapper to convert DTO to Entity
-        return roleRepository.save(role);
+        // Use RoleMapper to convert DTO to Entity
+        Role role = roleMapper.fromRequest(addRoleRequest);
+        // Save the role
+        Role savedRole = roleRepository.save(role);
+        // Return the response DTO
+        return roleMapper.toResponse(savedRole); // Assume you have a toResponse method in RoleMapper
     }
                 @Override
                 public List<Role> findAllRoles() {
@@ -103,11 +123,22 @@ public class TravelServiceImplementations implements TravelService {
                     return roleRepository.findById(id)
                             .orElseThrow(() -> new RoleNotFoundException("Role not found for id: " + id));
                 }
+                // Update Role
+                @Override
+                public UpdateRoleResponse updateRole(Long id, UpdateRoleRequest updateRoleRequest) {
+                    Role existingRole = roleRepository.findById(id)
+                            .orElseThrow(() -> new RoleNotFoundException("Role not found"));
+
+                    roleMapper.fromUpdateRequest(updateRoleRequest, existingRole);
+                    Role updatedRole = roleRepository.save(existingRole);
+                    return roleMapper.toUpdateResponse(updatedRole); // Return UpdateRoleResponse
+                }
+                // Delete Role
                 @Override
                 public void deleteRoleById(Long id) {
-                    // This method deletes a role based on its ID from the roleRepository.
-                    // It directly calls the deleteById method to remove the role, and no exception is thrown
-                    // if the ID does not exist in the repository.
+                    if (!roleRepository.existsById(id)) {
+                        throw new RoleNotFoundException("Role not found for ID: " + id);
+                    }
                     roleRepository.deleteById(id);
                 }
 
@@ -115,6 +146,7 @@ public class TravelServiceImplementations implements TravelService {
 
     // TOUR-RELATED METHODS:
 
+    // Add Tour
     @Override
     public TourResponse addTour(AddTourRequest addTourRequest) {
         // Check if a tour with the same name already exists
@@ -122,7 +154,6 @@ public class TravelServiceImplementations implements TravelService {
         if (existingTour.isPresent()) {
             throw new TourAlreadyExistsException("A tour with this name already exists");
         }
-
         // Fetch related entities (countries, cities, airports, hotels) based on IDs provided in AddTourRequest
         Country fromCountry = countryRepository.findById(addTourRequest.getFromCountryId())
                 .orElseThrow(() -> new CountryNotFoundException("Country not found"));
@@ -197,26 +228,22 @@ public class TravelServiceImplementations implements TravelService {
         if (existingUserByEmail.isPresent()) {
             throw new UserAlreadyExistsException("A user with this email already exists");
         }
-
         // Check for existing user by username
         Optional<User> existingUserByUsername = userRepository.findUserByUsername(addUserRequest.getUsername());
         if (existingUserByUsername.isPresent()) {
             throw new UserAlreadyExistsException("A user with this username already exists");
         }
-
         // Convert AddUserRequest to User entity
         User user = userMapper.fromRequest(addUserRequest);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(addUserRequest.getPassword());
         user.setPassword(hashedPassword);
-
         // Set default role if none provided
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
             Role userRole = roleRepository.findRoleByRoleName("USER")
                     .orElseThrow(() -> new RoleNotFoundException("Default role 'USER' does not exist."));
             user.getRoles().add(userRole);
         }
-
         // Add specified roles by IDs
         if (addUserRequest.getRoleIds() != null && !addUserRequest.getRoleIds().isEmpty()) {
             for (Long roleId : addUserRequest.getRoleIds()) {
@@ -225,7 +252,6 @@ public class TravelServiceImplementations implements TravelService {
                 user.getRoles().add(fetchedRole);
             }
         }
-
         // Add specified tours by IDs
         if (addUserRequest.getTourIds() != null && !addUserRequest.getTourIds().isEmpty()) {
             List<Tour> tours = new ArrayList<>();
@@ -236,58 +262,49 @@ public class TravelServiceImplementations implements TravelService {
             }
             user.setTours(tours);
         }
-
         User savedUser = userRepository.save(user);
         return userMapper.toResponse(savedUser);
     }
-
-    @Override
-    public List<UserResponse> findAllUsers() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public UserResponse getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found for ID: " + id));
-        return userMapper.toResponse(user);
-    }
-
-    @Override
-    public UpdateUserResponse updateUser(Long id, UpdateUserRequest updateUserRequest) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-        userMapper.fromUpdateRequest(updateUserRequest, existingUser);
-
-        // Update password if provided
-        if (updateUserRequest.getPassword() != null && !updateUserRequest.getPassword().isEmpty()) {
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String hashedPassword = passwordEncoder.encode(updateUserRequest.getPassword());
-            existingUser.setPassword(hashedPassword);
-        }
-
-        User updatedUser = userRepository.save(existingUser);
-        return userMapper.toUpdateResponse(updatedUser);
-    }
-
-    @Override
-    public void deleteUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found for ID: " + id));
-        // Clear associations first if necessary
-        for (Tour tour : user.getTours()) {
-            tour.getUsers().remove(user);
-        }
-        for (Role role : user.getRoles()) {
-            role.getUsers().remove(user);
-        }
-        // Finally, delete the user
-        userRepository.delete(user);
-    }
-
+                @Override
+                public List<UserResponse> findAllUsers() {
+                    return userRepository.findAll().stream()
+                            .map(userMapper::toResponse)
+                            .collect(Collectors.toList());
+                }
+                @Override
+                public UserResponse getUserById(Long id) {
+                    User user = userRepository.findById(id)
+                            .orElseThrow(() -> new UserNotFoundException("User not found for ID: " + id));
+                    return userMapper.toResponse(user);
+                }
+                @Override
+                public UpdateUserResponse updateUser(Long id, UpdateUserRequest updateUserRequest) {
+                    User existingUser = userRepository.findById(id)
+                            .orElseThrow(() -> new UserNotFoundException("User not found"));
+                    userMapper.fromUpdateRequest(updateUserRequest, existingUser);
+                    // Update password if provided
+                    if (updateUserRequest.getPassword() != null && !updateUserRequest.getPassword().isEmpty()) {
+                        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                        String hashedPassword = passwordEncoder.encode(updateUserRequest.getPassword());
+                        existingUser.setPassword(hashedPassword);
+                    }
+                    User updatedUser = userRepository.save(existingUser);
+                    return userMapper.toUpdateResponse(updatedUser);
+                }
+                @Override
+                public void deleteUserById(Long id) {
+                    User user = userRepository.findById(id)
+                            .orElseThrow(() -> new UserNotFoundException("User not found for ID: " + id));
+                    // Clear associations first if necessary
+                    for (Tour tour : user.getTours()) {
+                        tour.getUsers().remove(user);
+                    }
+                    for (Role role : user.getRoles()) {
+                        role.getUsers().remove(user);
+                    }
+                    // Finally, delete the user
+                    userRepository.delete(user);
+                }
 
 // -------------------------------------------------------------------------------------------------------------
 
@@ -354,13 +371,17 @@ public class TravelServiceImplementations implements TravelService {
     // COUNTRY-RELATED METHODS:
 
     @Override
-    public Country addCountry(AddCountryRequest addCountryRequest) {
+    public CountryResponse addCountry(AddCountryRequest addCountryRequest) {
         // Check if the country already exists
         if (countryRepository.existsByCountryName(addCountryRequest.getCountryName())) {
             throw new CountryAlreadyExistsException("Country already exists: " + addCountryRequest.getCountryName());
         }
+        // Convert request to entity using the mapper
         Country country = countryMapper.fromRequest(addCountryRequest);
-        return countryRepository.save(country);
+        // Save the country
+        Country savedCountry = countryRepository.save(country);
+        // Return the response DTO
+        return countryMapper.toResponse(savedCountry); // Assume you have a toResponse method in CountryMapper
     }
                 @Override
                 public List<Country> findAllCountries() {
@@ -375,11 +396,22 @@ public class TravelServiceImplementations implements TravelService {
                     return countryRepository.findById(id)
                             .orElseThrow(() -> new CountryNotFoundException("Country not found for ID: " + id));
                 }
+                // Update Country
+                @Override
+                public UpdateCountryResponse updateCountry(Long id, UpdateCountryRequest updateCountryRequest) {
+                    Country existingCountry = countryRepository.findById(id)
+                            .orElseThrow(() -> new CountryNotFoundException("Country not found"));
+
+                    countryMapper.fromUpdateRequest(updateCountryRequest, existingCountry);
+                    Country updatedCountry = countryRepository.save(existingCountry);
+                    return countryMapper.toUpdateResponse(updatedCountry); // Ensure this returns UpdateCountryResponse
+                }
+                // Delete Country
                 @Override
                 public void deleteCountryById(Long id) {
-                    // Deletes a country from the repository using the provided country ID.
-                    // If the country does not exist, it will proceed with the deletion.
-                    // To enhance error handling, consider checking for existence first.
+                    if (!countryRepository.existsById(id)) {
+                        throw new CountryNotFoundException("Country not found for ID: " + id);
+                    }
                     countryRepository.deleteById(id);
                 }
 
@@ -388,7 +420,7 @@ public class TravelServiceImplementations implements TravelService {
     // CITY-RELATED METHODS:
 
     @Override
-    public City addCity(AddCityRequest addCityRequest) {
+    public CityResponse addCity(AddCityRequest addCityRequest) {
         // Check if the country associated with the city exists.
         Country country = countryRepository.findById(addCityRequest.getCountryId())
                 .orElseThrow(() -> new CountryNotFoundException("Country not found"));
@@ -399,9 +431,11 @@ public class TravelServiceImplementations implements TravelService {
         // Convert the AddCityRequest DTO to a City entity using the cityMapper.
         City city = cityMapper.fromRequest(addCityRequest);
         // Associate the newly created city with the found country.
-        city.setCountry(country);
-        // Save the city to the repository and return the saved city entity.
-        return cityRepository.save(city);
+        city.setCountry(country); // Set the country here
+        // Save the city to the repository.
+        City savedCity = cityRepository.save(city);
+        // Return the response DTO using the mapper.
+        return cityMapper.toResponse(savedCity);
     }
                 @Override
                 public List<City> findAllCities() {
@@ -416,11 +450,34 @@ public class TravelServiceImplementations implements TravelService {
                     return cityRepository.findById(id)
                             .orElseThrow(() -> new CityNotFoundException("City not found for ID: " + id));
                 }
+                // Update City
+                @Override
+                public UpdateCityResponse updateCity(Long id, UpdateCityRequest updateCityRequest) {
+                    // Find the existing city by ID
+                    City existingCity = cityRepository.findById(id)
+                            .orElseThrow(() -> new CityNotFoundException("City not found"));
+
+                    // Check if a country ID is provided in the request
+                    if (updateCityRequest.getCountryId() != null) {
+                        // Fetch the country and set it on the existing city
+                        Country country = countryRepository.findById(updateCityRequest.getCountryId())
+                                .orElseThrow(() -> new CountryNotFoundException("Country not found"));
+                        existingCity.setCountry(country); // Set the country reference here
+                    }
+
+                    // Update the city name using the mapper
+                    cityMapper.fromUpdateRequest(updateCityRequest, existingCity);
+                    // Save the updated city back to the repository
+                    City updatedCity = cityRepository.save(existingCity);
+                    // Return the response DTO
+                    return cityMapper.toUpdateResponse(updatedCity);
+                }
+                // Delete City
                 @Override
                 public void deleteCityById(Long id) {
-                    // Deletes a city from the repository using the provided city ID.
-                    // If the city does not exist, it will proceed with the deletion.
-                    // To enhance error handling, consider checking for existence first.
+                    if (!cityRepository.existsById(id)) {
+                        throw new CityNotFoundException("City not found for ID: " + id);
+                    }
                     cityRepository.deleteById(id);
                 }
 
@@ -428,8 +485,9 @@ public class TravelServiceImplementations implements TravelService {
 
     // AIRPORT-RELATED METHODS:
 
+    // Add Airport
     @Override
-    public Airport addAirport(AddAirportRequest addAirportRequest) {
+    public AirportResponse addAirport(AddAirportRequest addAirportRequest) {
         // Check if the city associated with the airport exists.
         City city = cityRepository.findById(addAirportRequest.getCityId())
                 .orElseThrow(() -> new CityNotFoundException("City not found with ID: " + addAirportRequest.getCityId()));
@@ -440,9 +498,11 @@ public class TravelServiceImplementations implements TravelService {
         // Convert the AddAirportRequest DTO to an Airport entity using the airportMapper.
         Airport airport = airportMapper.fromRequest(addAirportRequest);
         // Associate the newly created airport with the found city.
-        airport.setCity(city);
-        // Save the airport to the repository and return the saved airport entity.
-        return airportRepository.save(airport);
+        airport.setCity(city); // Set the city here
+        // Save the airport to the repository.
+        Airport savedAirport = airportRepository.save(airport);
+        // Return the response DTO using the mapper.
+        return airportMapper.toResponse(savedAirport);
     }
                 @Override
                 public List<Airport> findAllAirports() {
@@ -457,11 +517,32 @@ public class TravelServiceImplementations implements TravelService {
                     return airportRepository.findById(id)
                             .orElseThrow(() -> new AirportNotFoundException("Airport not found for ID: " + id));
                 }
+                // Update Airport
+                @Override
+                public UpdateAirportResponse updateAirport(Long id, UpdateAirportRequest updateAirportRequest) {
+                    // Find the existing airport by ID
+                    Airport existingAirport = airportRepository.findById(id)
+                            .orElseThrow(() -> new AirportNotFoundException("Airport not found"));
+                    // Check if a city ID is provided in the request
+                    if (updateAirportRequest.getCityId() != null) {
+                        // Fetch the city and set it on the existing airport
+                        City city = cityRepository.findById(updateAirportRequest.getCityId())
+                                .orElseThrow(() -> new CityNotFoundException("City not found"));
+                        existingAirport.setCity(city); // Set the city reference here
+                    }
+                    // Update the airport name using the mapper
+                    airportMapper.fromUpdateRequest(updateAirportRequest, existingAirport);
+                    // Save the updated airport back to the repository
+                    Airport updatedAirport = airportRepository.save(existingAirport);
+                    // Return the response DTO
+                    return airportMapper.toUpdateResponse(updatedAirport);
+                }
+                // Delete Airport
                 @Override
                 public void deleteAirportById(Long id) {
-                    // Deletes an airport from the repository using the provided airport ID.
-                    // If the airport does not exist, it will proceed with the deletion.
-                    // To enhance error handling, consider checking for existence first.
+                    if (!airportRepository.existsById(id)) {
+                        throw new AirportNotFoundException("Airport not found for ID: " + id);
+                    }
                     airportRepository.deleteById(id);
                 }
 
@@ -470,13 +551,17 @@ public class TravelServiceImplementations implements TravelService {
     // HOTEL-RELATED METHODS:
 
     @Override
-    public Hotel addHotel(AddHotelRequest addHotelRequest) {
+    public HotelResponse addHotel(AddHotelRequest addHotelRequest) {
         // Check if the hotel already exists
         if (hotelRepository.existsByHotelName(addHotelRequest.getHotelName())) {
             throw new HotelAlreadyExistsException("Hotel already exists: " + addHotelRequest.getHotelName());
         }
-        Hotel hotel = hotelMapper.fromRequest(addHotelRequest); // Use mapper to convert request to entity
-        return hotelRepository.save(hotel); // Return the saved Hotel entity
+        // Use mapper to convert request to entity
+        Hotel hotel = hotelMapper.fromRequest(addHotelRequest);
+        // Save the hotel
+        Hotel savedHotel = hotelRepository.save(hotel);
+        // Return the response DTO
+        return hotelMapper.toResponse(savedHotel); // Assume you have a toResponse method in HotelMapper
     }
                 @Override
                 public List<Hotel> findAllHotels() {
@@ -489,9 +574,19 @@ public class TravelServiceImplementations implements TravelService {
                     return hotelRepository.findById(id)
                             .orElseThrow(() -> new HotelNotFoundException("Hotel not found for ID: " + id));
                 }
+                // Update Hotel
+                @Override
+                public UpdateHotelResponse updateHotel(Long id, UpdateHotelRequest updateHotelRequest) {
+                    Hotel existingHotel = hotelRepository.findById(id)
+                            .orElseThrow(() -> new HotelNotFoundException("Hotel not found"));
+
+                    hotelMapper.fromUpdateRequest(updateHotelRequest, existingHotel);
+                    Hotel updatedHotel = hotelRepository.save(existingHotel);
+                    return hotelMapper.toUpdateResponse(updatedHotel); // Return UpdateHotelResponse
+                }
+                // Delete Hotel
                 @Override
                 public void deleteHotelById(Long id) {
-                    // Deletes a hotel from the repository using the provided hotel ID.
                     if (!hotelRepository.existsById(id)) {
                         throw new HotelNotFoundException("Hotel not found for ID: " + id); // Enhance error handling
                     }

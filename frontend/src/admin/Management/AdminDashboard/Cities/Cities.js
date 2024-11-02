@@ -31,7 +31,7 @@ const Cities = () => {
     // Function to add or update a city (POST/PUT)
     const addOrUpdateCity = async (event) => {
         event.preventDefault();
-        const cityData = { cityName: newCityName, countryId };
+        const cityData = { cityName: newCityName || "", countryId: countryId || "" };
 
         try {
             const response = editingCityId
@@ -47,14 +47,13 @@ const Cities = () => {
                 });
 
             if (!response.ok) {
-                // Check for specific error response
                 if (response.status === 404) {
                     setErrorMessage("Country not found. Please enter a valid country ID.");
                 } else {
                     throw new Error(editingCityId ? 'Failed to update city' : 'Failed to create city');
                 }
-                setSuccessMessage(""); // Clear success message on error
-                return; // Exit the function if there was an error
+                setSuccessMessage("");
+                return;
             }
 
             const newCity = await response.json();
@@ -62,8 +61,8 @@ const Cities = () => {
                 ? cities.map(city => (city.id === editingCityId ? newCity : city))
                 : [...cities, newCity]);
             resetForm();
-            setErrorMessage(""); // Clear error message on success
-            setSuccessMessage(editingCityId ? 'City updated successfully!' : 'City added successfully!'); // Set success message
+            setErrorMessage("");
+            setSuccessMessage(editingCityId ? 'City updated successfully!' : 'City added successfully!');
         } catch (error) {
             console.error('Error adding/updating city:', error);
         }
@@ -71,11 +70,11 @@ const Cities = () => {
 
     // Function to handle editing a city
     const handleEdit = (city) => {
-        setNewCityName(city.cityName);
-        setCountryId(city.countryId);
+        setNewCityName(city.cityName || ""); // Ensure default empty string
+        setCountryId(city.countryId || "");  // Ensure default empty string
         setEditingCityId(city.id);
-        setErrorMessage(""); // Clear any previous error message
-        setSuccessMessage(""); // Clear any previous success message
+        setErrorMessage("");
+        setSuccessMessage("");
     };
 
     // Function to delete a city (DELETE)
@@ -96,20 +95,20 @@ const Cities = () => {
         setNewCityName("");
         setCountryId("");
         setEditingCityId(null);
-        setSuccessMessage(""); // Clear success message
-        setErrorMessage(""); // Clear error message on reset
+        setSuccessMessage("");
+        setErrorMessage("");
     };
 
     return (
         <div className="cities-container">
-         <div className="cities-header">
-             <h1>Manage Cities</h1>
-         </div>
+            <div className="cities-header">
+                <h1>Manage Cities</h1>
+            </div>
             <form className="add-city-form" onSubmit={addOrUpdateCity}>
                 <input
                     type="text"
                     className="form-input"
-                    value={newCityName}
+                    value={newCityName || ""} // Ensure controlled input
                     onChange={(e) => setNewCityName(e.target.value)}
                     placeholder="Enter city name"
                     required
@@ -117,7 +116,7 @@ const Cities = () => {
                 <input
                     type="text"
                     className="form-input"
-                    value={countryId}
+                    value={countryId || ""} // Ensure controlled input
                     onChange={(e) => setCountryId(e.target.value)}
                     placeholder="Enter country ID"
                     required
@@ -125,9 +124,18 @@ const Cities = () => {
                 <button type="submit" className="submit-button">
                     {editingCityId ? 'Update City' : 'Add City'}
                 </button>
+                {editingCityId && (
+                    <button
+                        type="button"
+                        onClick={resetForm}
+                        className="cancel-button"
+                    >
+                        Cancel
+                    </button>
+                )}
             </form>
-            {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Centered error message */}
-            {successMessage && <div className="success-message" style={{ color: 'green' }}>{successMessage}</div>} {/* Success message */}
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
+            {successMessage && <div className="success-message" style={{ color: 'green' }}>{successMessage}</div>}
             <h2>City List</h2>
             <ul className="city-list">
                 {cities.map((city) => (

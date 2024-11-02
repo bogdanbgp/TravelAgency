@@ -23,8 +23,8 @@ const Users = () => {
         password: '',
     });
     const [showUpdateForm, setShowUpdateForm] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(""); // New state for error messages
-    const [successMessage, setSuccessMessage] = useState(""); // New state for success messages
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
     const updateFormRef = useRef(null);
 
     // Fetch all users from the API
@@ -40,13 +40,12 @@ const Users = () => {
                 setUsers(data);
             } catch (error) {
                 console.error('Error fetching users:', error);
-                setErrorMessage('Failed to fetch users.'); // Set error message
+                setErrorMessage('Failed to fetch users.');
             }
         };
         fetchUsers();
     }, []);
 
-    // Handle input changes for both the new user form and update form
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -63,7 +62,6 @@ const Users = () => {
         }));
     };
 
-    // Handle user deletion
     const deleteUser = async (id) => {
         try {
             const response = await fetch(`http://localhost:8080/api/admin/users/${id}`, {
@@ -72,16 +70,15 @@ const Users = () => {
             });
             if (!response.ok) throw new Error('Failed to delete user');
             setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
-            setSuccessMessage('User deleted successfully!'); // Set success message
-            setErrorMessage(""); // Clear error message
+            setSuccessMessage('User deleted successfully!');
+            setErrorMessage("");
         } catch (error) {
             console.error('Error deleting user:', error);
-            setErrorMessage('Failed to delete user.'); // Set error message
-            setSuccessMessage(""); // Clear success message
+            setErrorMessage('Failed to delete user.');
+            setSuccessMessage("");
         }
     };
 
-    // Handle user update
     const updateUser = async (e) => {
         e.preventDefault();
         try {
@@ -92,7 +89,7 @@ const Users = () => {
                     username: formData.username,
                     firstName: formData.firstName,
                     lastName: formData.lastName,
-                    age: parseInt(formData.age, 10), // Ensure age is an integer
+                    age: parseInt(formData.age, 10),
                     email: formData.email,
                     mobile: formData.mobile,
                     password: formData.password,
@@ -114,16 +111,15 @@ const Users = () => {
                 mobile: '',
                 password: '',
             });
-            setSuccessMessage('User updated successfully!'); // Set success message
-            setErrorMessage(""); // Clear error message
+            setSuccessMessage('User updated successfully!');
+            setErrorMessage("");
         } catch (error) {
             console.error('Error updating user:', error);
-            setErrorMessage('Failed to update user.'); // Set error message
-            setSuccessMessage(""); // Clear success message
+            setErrorMessage('Failed to update user.');
+            setSuccessMessage("");
         }
     };
 
-    // Handle adding a new user
     const addUser = async (e) => {
         e.preventDefault();
         try {
@@ -134,7 +130,7 @@ const Users = () => {
                     username: newUserData.username,
                     firstName: newUserData.firstName,
                     lastName: newUserData.lastName,
-                    age: parseInt(newUserData.age, 10), // Ensure age is an integer
+                    age: parseInt(newUserData.age, 10),
                     email: newUserData.email,
                     mobile: newUserData.mobile,
                     password: newUserData.password,
@@ -142,7 +138,6 @@ const Users = () => {
             });
             if (!response.ok) {
                 if (response.status === 409) {
-                    // Handle conflict (user already exists)
                     throw new Error('A user with this email or username already exists');
                 }
                 throw new Error('Failed to add user');
@@ -158,16 +153,15 @@ const Users = () => {
                 mobile: '',
                 password: '',
             });
-            setSuccessMessage('User added successfully!'); // Set success message
-            setErrorMessage(""); // Clear error message
+            setSuccessMessage('User added successfully!');
+            setErrorMessage("");
         } catch (error) {
             console.error('Error adding user:', error);
-            setErrorMessage('Failed to add user.'); // Set error message
-            setSuccessMessage(""); // Clear success message
+            setErrorMessage('Failed to add user.');
+            setSuccessMessage("");
         }
     };
 
-    // Scroll to the update form and populate data
     const handleSelectUser = (user) => {
         setFormData({
             id: user.id,
@@ -177,13 +171,16 @@ const Users = () => {
             age: user.age,
             email: user.email,
             mobile: user.mobile,
-            password: '', // Password should be empty on update
+            password: '',
         });
         setShowUpdateForm(true);
-        // Scroll to the update form
         if (updateFormRef.current) {
             updateFormRef.current.scrollIntoView({ behavior: 'smooth' });
         }
+    };
+
+    const cancelUpdate = () => {
+        setShowUpdateForm(false);
     };
 
     return (
@@ -192,8 +189,8 @@ const Users = () => {
                 <h1>Manage Users</h1>
             </div>
 
-            {errorMessage && <div className="error-message" style={{ color: 'red' }}>{errorMessage}</div>} {/* Display error message */}
-            {successMessage && <div className="success-message" style={{ color: 'green' }}>{successMessage}</div>} {/* Display success message */}
+            {errorMessage && <div className="error-message" style={{ color: 'red' }}>{errorMessage}</div>}
+            {successMessage && <div className="success-message" style={{ color: 'green' }}>{successMessage}</div>}
 
             <h2>User List</h2>
             <ul className="user-list">
@@ -356,6 +353,7 @@ const Users = () => {
                             className="form-input"
                         />
                         <button type="submit" className="submit-button">Update User</button>
+                        <button type="button" onClick={cancelUpdate} className="cancel-button">Cancel</button>
                     </form>
                 </div>
             )}

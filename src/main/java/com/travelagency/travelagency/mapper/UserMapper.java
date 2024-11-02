@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Component
 public class UserMapper {
 
+    // Mapping from AddUserRequest to User entity
     public User fromRequest(AddUserRequest addUserRequest) {
         User user = new User();
         user.setUsername(addUserRequest.getUsername());
@@ -37,7 +38,6 @@ public class UserMapper {
             }
             user.setRoles(roles);
         }
-
         // Set tours from tour IDs if provided
         if (addUserRequest.getTourIds() != null && !addUserRequest.getTourIds().isEmpty()) {
             List<Tour> tours = new ArrayList<>();
@@ -48,9 +48,33 @@ public class UserMapper {
             }
             user.setTours(tours);
         }
-        return user;
+        return user; // Return the constructed User entity
     }
+                // Mapping from User entity to UserResponse DTO
+                public UserResponse toResponse(User user) {
+                    List<String> roleNames = user.getRoles().stream()
+                            .map(Role::getRoleName)
+                            .collect(Collectors.toList());
+                    List<String> tourNames = user.getTours().stream()
+                            .map(Tour::getTourName)
+                            .collect(Collectors.toList());
 
+                    return new UserResponse(
+                            user.getId(),
+                            user.getUsername(),
+                            user.getFirstName(),
+                            user.getLastName(),
+                            user.getAge(),
+                            user.getEmail(),
+                            user.getMobile(),
+                            roleNames,
+                            tourNames
+                    );
+                }
+
+
+
+    // Mapping from UpdateUserRequest to existing User entity
     public User fromUpdateRequest(UpdateUserRequest updateUserRequest, User existingUser) {
         existingUser.setUsername(updateUserRequest.getUsername());
         existingUser.setFirstName(updateUserRequest.getFirstName());
@@ -58,46 +82,23 @@ public class UserMapper {
         existingUser.setAge(updateUserRequest.getAge());
         existingUser.setEmail(updateUserRequest.getEmail());
         existingUser.setMobile(updateUserRequest.getMobile());
-
         // Only update password if it's provided
         if (updateUserRequest.getPassword() != null && !updateUserRequest.getPassword().isEmpty()) {
             existingUser.setPassword(updateUserRequest.getPassword());
         }
 
-        return existingUser;
+        return existingUser; // Return the updated User entity
     }
-
-    public UserResponse toResponse(User user) {
-        List<String> roleNames = user.getRoles().stream()
-                .map(Role::getRoleName)
-                .collect(Collectors.toList());
-        List<String> tourNames = user.getTours().stream()
-                .map(Tour::getTourName)
-                .collect(Collectors.toList());
-
-        return new UserResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getAge(),
-                user.getEmail(),
-                user.getMobile(),
-                roleNames,
-                tourNames
-        );
-    }
-
-    public UpdateUserResponse toUpdateResponse(User user) {
-        return new UpdateUserResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getAge(),
-                user.getEmail(),
-                user.getMobile()
-        );
-    }
+                // Mapping from User entity to UpdateUserResponse DTO
+                public UpdateUserResponse toUpdateResponse(User user) {
+                    return new UpdateUserResponse(
+                            user.getId(),
+                            user.getUsername(),
+                            user.getFirstName(),
+                            user.getLastName(),
+                            user.getAge(),
+                            user.getEmail(),
+                            user.getMobile()
+                    );
+                }
 }
-

@@ -120,6 +120,15 @@ const Countries = () => {
                 <button type="submit" className="submit-button">
                     {editingCountryId ? 'Update Country' : 'Add Country'}
                 </button>
+                {editingCountryId && (
+                    <button
+                        type="button"
+                        onClick={resetForm}
+                        className="cancel-button"
+                    >
+                        Cancel
+                    </button>
+                )}
             </form>
 
             {errorMessage && <div className="error-message" style={{ color: 'red' }}>{errorMessage}</div>} {/* Centered error message */}

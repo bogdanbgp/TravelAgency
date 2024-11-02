@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import './Hotels.css'; // Ensure this CSS file is created or modified accordingly
+import './Hotels.css';
 
 const Hotels = () => {
     const [hotels, setHotels] = useState([]);
     const [newHotelName, setNewHotelName] = useState("");
     const [editingHotelId, setEditingHotelId] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(""); // State for error message
-    const [successMessage, setSuccessMessage] = useState(""); // State for success message
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
 
     // Fetch all hotels when the component mounts
     useEffect(() => {
@@ -32,7 +32,10 @@ const Hotels = () => {
     // Function to add or update a hotel (POST/PUT)
     const addOrUpdateHotel = async (event) => {
         event.preventDefault();
-        const hotelData = { hotelName: newHotelName }; // Removed cityId
+        const hotelData = { hotelName: newHotelName };
+
+        // Clear any existing error message when attempting a new action
+        setErrorMessage("");
 
         try {
             const response = editingHotelId
@@ -49,7 +52,7 @@ const Hotels = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message); // Show error message
+                throw new Error(errorData.message);
             }
 
             const newHotel = await response.json();
@@ -59,11 +62,9 @@ const Hotels = () => {
                 setHotels([...hotels, newHotel]);
             }
             resetForm();
-            setSuccessMessage(editingHotelId ? 'Hotel updated successfully!' : 'Hotel added successfully!'); // Set success message
-            setErrorMessage(""); // Clear error message on success
+            setSuccessMessage(editingHotelId ? 'Hotel updated successfully!' : 'Hotel added successfully!');
         } catch (error) {
-            setErrorMessage(`Error: ${error.message}`); // Set error message
-            setSuccessMessage(""); // Clear success message on error
+            setErrorMessage(`Error: ${error.message}`);
             console.error('Error adding/updating hotel:', error);
         }
     };
@@ -72,24 +73,31 @@ const Hotels = () => {
     const handleEdit = (hotel) => {
         setNewHotelName(hotel.hotelName);
         setEditingHotelId(hotel.id);
-        setErrorMessage(""); // Clear any previous error message
-        setSuccessMessage(""); // Clear any previous success message
+        // Clear messages
+        setErrorMessage("");
+        setSuccessMessage("");
     };
 
     // Function to delete a hotel (DELETE)
     const handleDelete = async (hotelId) => {
+        // Clear success message before deletion attempt
+        setSuccessMessage("");
+
+        // Clear error message before making a deletion request
+        setErrorMessage("");
+
         try {
             const response = await fetch(`http://localhost:8080/api/admin/hotels/${hotelId}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
-                throw new Error('Failed to delete hotel');
+                const errorData = await response.json();
+                throw new Error(errorData.message);
             }
             setHotels(hotels.filter((hotel) => hotel.id !== hotelId));
-            setSuccessMessage('Hotel deleted successfully!'); // Set success message
-            setErrorMessage(""); // Clear error message on successful deletion
+            setSuccessMessage('Hotel deleted successfully!');
         } catch (error) {
-            setErrorMessage(`Error: ${error.message}`); // Set error message
+            setErrorMessage(`Error: ${error.message}`);
             console.error('Error deleting hotel:', error);
         }
     };
@@ -98,8 +106,8 @@ const Hotels = () => {
     const resetForm = () => {
         setNewHotelName("");
         setEditingHotelId(null);
-        setSuccessMessage(""); // Clear success message
-        setErrorMessage(""); // Clear error message on reset
+        setSuccessMessage("");
+        setErrorMessage("");
     };
 
     return (
@@ -120,10 +128,19 @@ const Hotels = () => {
                 <button type="submit" className="submit-button">
                     {editingHotelId ? 'Update Hotel' : 'Add Hotel'}
                 </button>
+                {editingHotelId && (
+                    <button
+                        type="button"
+                        onClick={resetForm}
+                        className="cancel-button"
+                    >
+                        Cancel
+                    </button>
+                )}
             </form>
 
-            {errorMessage && <div className="error-message" style={{ color: 'red' }}>{errorMessage}</div>} {/* Centered error message */}
-            {successMessage && <div className="success-message" style={{ color: 'green' }}>{successMessage}</div>} {/* Success message */}
+            {errorMessage && <div className="error-message" style={{ color: 'red' }}>{errorMessage}</div>}
+            {successMessage && <div className="success-message" style={{ color: 'green' }}>{successMessage}</div>}
 
             <h2>Hotel List</h2>
             <ul className="user-list">

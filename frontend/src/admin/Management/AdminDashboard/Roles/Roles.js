@@ -139,6 +139,15 @@ const Roles = () => {
                 <button type="submit" className="submit-button">
                     {editingRoleId ? 'Update Role' : 'Add Role'}
                 </button>
+                {editingRoleId && (
+                    <button
+                        type="button"
+                        onClick={resetForm}
+                        className="cancel-button"
+                    >
+                        Cancel
+                    </button>
+                )}
             </form>
 
             {errorMessage && <div className="error-message" style={{ color: 'red' }}>{errorMessage}</div>}
