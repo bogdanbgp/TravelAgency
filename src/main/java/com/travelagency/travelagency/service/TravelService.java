@@ -12,7 +12,6 @@ import com.travelagency.travelagency.dto.request.role.AddRoleRequest;
 import com.travelagency.travelagency.dto.request.role.AddRoleToUserRequest;
 import com.travelagency.travelagency.dto.request.role.UpdateRoleRequest;
 import com.travelagency.travelagency.dto.request.tour.AddTourRequest;
-import com.travelagency.travelagency.dto.request.tour.AddTourToUserRequest;
 import com.travelagency.travelagency.dto.request.tour.UpdateTourRequest;
 import com.travelagency.travelagency.dto.request.user.AddUserRequest;
 import com.travelagency.travelagency.dto.request.user.UpdateUserRequest;
@@ -26,6 +25,7 @@ import com.travelagency.travelagency.dto.response.hotel.HotelResponse;
 import com.travelagency.travelagency.dto.response.hotel.UpdateHotelResponse;
 import com.travelagency.travelagency.dto.response.role.RoleResponse;
 import com.travelagency.travelagency.dto.response.role.UpdateRoleResponse;
+import com.travelagency.travelagency.dto.response.tour.AddTourToUserResponse;
 import com.travelagency.travelagency.dto.response.tour.TourResponse;
 import com.travelagency.travelagency.dto.response.tour.UpdateTourResponse;
 import com.travelagency.travelagency.dto.response.user.UpdateUserResponse;
@@ -49,20 +49,22 @@ public interface TravelService {
     Tour getTourById(Long id);    // GET api     // Get a specific tour by its ID
     UpdateTourResponse updateTour(Long id, UpdateTourRequest updateTourRequest);
     void deleteTourById(Long id);                // Delete a tour by its ID
+    void bookTourForUser(Long userId, Long tourId);
+    AddTourToUserResponse addTourToUser(Long userId, Long tourId);
+    void removeTourFromUser(Long userId, Long tourId);
+    List<Tour> findToursForUser(Long userId);
 
     // User-related methods
     UserResponse addUser(AddUserRequest addUserRequest);  // Add a new user using request DTO
     List<UserResponse> findAllUsers();                     // Retrieve a list of all users
-    UserResponse getUserById(Long id); // GET api         // GET a specific user by its ID
+    User getUserById(Long id); // GET api         // GET a specific user by its ID
     UpdateUserResponse updateUser(Long id, UpdateUserRequest updateUserRequest);
     void deleteUserById(Long id);                 // Delete a user by their ID
 
                     // User-role related methods
                     User addRoleToUser(AddRoleToUserRequest addRoleToUserRequest);  // Assign a role to a user
                         void removeRoleFromUser(Long userId, Long roleId);
-                    // User-tour related methods
-                    User addTourToUser(AddTourToUserRequest addTourToUserRequest);  // Assign a tour to a user
-                        void removeTourFromUser(Long userId, Long tourId);
+
 
     // Country-related methods
     CountryResponse addCountry(AddCountryRequest addCountryRequest);  // Add a new country using request DTO

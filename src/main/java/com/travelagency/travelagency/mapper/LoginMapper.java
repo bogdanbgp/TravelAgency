@@ -18,6 +18,7 @@ public class LoginMapper {
                 // Mapping from User entity to LoginResponse (after successful login)
                 public LoginResponse toResponse(User user) {
                     String message = "Login successful"; // Success message
-                    return new LoginResponse(message, user.getUsername());
+                    return new LoginResponse(user.getId(), message, user.getUsername()); // Include ID in the response
                 }
+
 }

@@ -95,9 +95,10 @@ public class AuthController {
                             return ResponseEntity.ok(response); // Return 200 OK with successful response
                         } catch (AuthenticationFailedException e) {
                             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                    .body(new LoginResponse(e.getMessage(), null)); // Return 401 Unauthorized with error message
+                                    .body(new LoginResponse(e.getMessage())); // Use the new constructor that only takes a message
                         }
                     }
+
 
 
     // ----------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,3 @@
-// App.js
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Import Navigate
 
@@ -6,6 +5,8 @@ import Navbar from './components/Navbar/Navbar';
 import Bye from './components/Bye/Bye';
 import NotFound from './components/NotFound/NotFound';
 import Profile from './components/Profile/Profile';  // Import the Profile component
+import Review from './pages/Review/Review'; // Import Review component
+import ReadReviews from './pages/Review/ReadReviews'; // Import ReadReviews component
 
 import Home from './pages/Home/Home';
 import About from './pages/About/About';
@@ -74,6 +75,12 @@ function App() {
           <Route path="/superadmin/cities" element={<Cities />} />
           <Route path="/superadmin/airports" element={<Airports />} />
           <Route path="/superadmin/hotels" element={<Hotels />} />
+
+          {/* SuperAdmin Route to Read Reviews */}
+          <Route path="/superadmin/reviews" element={superAdmin ? <ReadReviews /> : <Navigate to="/login/superadmin" />} />
+
+          {/* Review Route - Only for Logged-in Users */}
+          <Route path="/review" element={user ? <Review /> : <Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
 
           {/* User Profile Route - Protected */}
           <Route path="/profile" element={user ? <Profile /> : <Navigate to="/login" />} />  {/* Redirect to login if not authenticated */}

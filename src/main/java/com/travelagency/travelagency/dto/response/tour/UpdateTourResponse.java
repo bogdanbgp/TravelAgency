@@ -14,7 +14,6 @@ public class UpdateTourResponse {
     private String tourName;
     private LocalDate departureDate; // LocalDate
     private LocalDate returnDate; // LocalDate
-    private int numberOfDays;
     private String description;
     private double price;
     private String fromCountry;

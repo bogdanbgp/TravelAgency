@@ -1,0 +1,101 @@
+/* src/pages/Review/ReadReviews.css */
+.review-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.review-container h2 {
+  color: #333;
+}
+
+.feedback {
+  color: green;
+  margin-bottom: 10px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Scoped changes for the reviews only */
+.review-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.review-item {
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.review-item strong {
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.review-item p {
+  color: #666;
+  font-size: 1rem;
+  margin: 5px 0;
+}
+
+.review-item button {
+  background-color: #e74c3c; /* Red background for delete button */
+  padding: 8px 15px;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 20px; /* Added space between review text and button */
+  transition: background-color 0.3s;
+}
+
+.review-item button:hover {
+  background-color: #c0392b; /* Darker red on hover */
+}
+
+/* Error message styling */
+p.error {
+  color: #e74c3c;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Success message styling */
+.deleteSuccess {
+  color: #27ae60;  /* Green color for success messages */
+  font-size: 1.1rem;
+  margin-top: 20px;
+  text-align: center;
+}
+

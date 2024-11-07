@@ -27,9 +27,6 @@ public class Tour {
     @Column(nullable = false)
     private LocalDate returnDate; // Return date is required
 
-    @Column(nullable = false)
-    private int numberOfDays; // Number of days should not be null
-
     private String description; // Description can be optional
 
     @Column(nullable = false)
@@ -65,6 +62,7 @@ public class Tour {
 
     //-------------------------------------
 
+    // Many-to-many relationship with User
     @ManyToMany(mappedBy = "tours") // Reference the tours from User
     private List<User> users = new ArrayList<>();
 }

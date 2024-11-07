@@ -4,13 +4,11 @@ import './Navbar.css';
 
 function Navbar({ handleLogout, isLoggedIn }) {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [notification, setNotification] = useState(null); // State for notifications
+  const [notification, setNotification] = useState(null);
   const navigate = useNavigate();
 
-  // Refs to manage outside clicks
   const logoutConfirmRef = useRef(null);
 
-  // Retrieve user and superadmin from session storage
   const user = JSON.parse(sessionStorage.getItem('user'));
   const superAdmin = JSON.parse(sessionStorage.getItem('superadmin'));
 
@@ -18,7 +16,6 @@ function Navbar({ handleLogout, isLoggedIn }) {
   const isUserLoggedIn = user !== null;
   const username = isUserLoggedIn ? user.username : isSuperAdminLoggedIn ? superAdmin.username : '';
 
-  // Handle outside clicks for logout confirmation
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (logoutConfirmRef.current && !logoutConfirmRef.current.contains(event.target)) {
@@ -26,7 +23,6 @@ function Navbar({ handleLogout, isLoggedIn }) {
       }
     };
 
-    // Add event listener for clicks
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -43,30 +39,27 @@ function Navbar({ handleLogout, isLoggedIn }) {
     navigate('/bye');
   };
 
-  // Function to handle admin login/register attempts
   const handleAdminAction = (e) => {
     e.preventDefault();
     if (isUserLoggedIn || isSuperAdminLoggedIn) {
       setNotification('Please log out to access admin options.');
     } else {
-      navigate('/login/superadmin'); // Redirect to admin login if logged out
+      navigate('/login/superadmin');
     }
   };
 
-  // Function to handle user login/register attempts
   const handleUserAction = (e) => {
     e.preventDefault();
     if (isSuperAdminLoggedIn) {
       setNotification('Please log out to access user options.');
     } else {
-      navigate('/login'); // Redirect to user login if logged out
+      navigate('/login');
     }
   };
 
-  // Function to handle SuperAdmin registration
   const handleSuperAdminRegister = (e) => {
     e.preventDefault();
-    navigate('/register/superadmin'); // Redirect to SuperAdmin registration page
+    navigate('/register/superadmin');
   };
 
   return (
@@ -76,6 +69,16 @@ function Navbar({ handleLogout, isLoggedIn }) {
         <li><Link to="/about">About</Link></li>
         <li><Link to="/contact">Contact</Link></li>
         <li><Link to="/tours">Available Tours</Link></li>
+
+        {/* Show Review link for users */}
+        {isUserLoggedIn && !isSuperAdminLoggedIn && (
+          <li><Link to="/review">Submit a Review</Link></li>
+        )}
+
+        {/* Show Read Reviews link for SuperAdmins */}
+        {isSuperAdminLoggedIn && (
+          <li><Link to="/superadmin/reviews">Read Reviews</Link></li>
+        )}
 
         {/* Display links based on user type */}
         {!isUserLoggedIn && !isSuperAdminLoggedIn && (
@@ -132,7 +135,6 @@ function Navbar({ handleLogout, isLoggedIn }) {
         )}
       </ul>
 
-      {/* Notification Display */}
       {notification && (
         <div className="notification">
           {notification}

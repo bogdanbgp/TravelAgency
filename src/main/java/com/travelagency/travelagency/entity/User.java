@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+// User Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,69 +22,77 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // User ID
+    private Long id;
 
-    @NotBlank(message = "Username is required") // Ensures username is not blank
+    @NotBlank(message = "Username is required")
     @Column(nullable = false, unique = true)
-    private String username; // Username should be unique and not null
+    private String username;
 
-    @NotBlank(message = "First name is required") // Ensures first name is not blank
+    @NotBlank(message = "First name is required")
     @Column(name = "first_name", nullable = false)
-    private String firstName; // User's first name
+    private String firstName;
 
-    @NotBlank(message = "Last name is required") // Ensures last name is not blank
+    @NotBlank(message = "Last name is required")
     @Column(name = "last_name", nullable = false)
-    private String lastName; // User's last name
+    private String lastName;
 
     @Min(value = 18, message = "Age must be at least 18")
-    private int age; // User's age
+    private int age;
 
-    @NotBlank(message = "Email is required") // Ensures email is not blank
-    @Email(message = "Email should be valid") // Validates email format
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
     @Column(nullable = false, unique = true)
-    private String email; // Email should be unique and not null
+    private String email;
 
     @Pattern(regexp = "\\d{10}", message = "Mobile number must be 10 digits")
-    private String mobile; // User's mobile number
+    private String mobile;
 
-    @NotBlank(message = "Password is required") // Ensures password is not blank
+    @NotBlank(message = "Password is required")
     @Column(nullable = false)
-    private String password; // Consider removing for security purposes after hashing
-// ---------------------------------------------------------------------------------------------------------------
-    // Many-to-Many relationship with Tour
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // Set to EAGER loading
-    @JoinTable( name = "users_tours",
+    private String password;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "users_tours",
             joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tour_id")} )
-    private List<Tour> tours = new ArrayList<>(); // List of tours booked by the user
-// ---------------------------------------------------------------------------------------------------------------
-    // Many-to-Many relationship with Role
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // Set to EAGER loading
-    @JoinTable( name = "users_roles",
+            inverseJoinColumns = {@JoinColumn(name = "tour_id")})
+    private List<Tour> tours = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")} )
-    private List<Role> roles = new ArrayList<>(); // User's roles
-// ---------------------------------------------------------------------------------------------------------------
-                // METHODS FOR SUPER-ADMIN MANAGEMENT:
-                public void addRole(Role role) {
-                    this.roles.add(role);
-                    role.getUsers().add(this);
-                }
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private List<Role> roles = new ArrayList<>();
 
-                public void addTour(Tour tour) {
-                    this.tours.add(tour); // Update to add the tour to the list
-                    tour.getUsers().add(this); // Set the user for the tour
-                }
+    // Add a helper method to get the full name of the user
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
 
-                // Remove a role from the user
-                public void removeRole(Role role) {
-                    this.roles.remove(role); // Remove the role from the user's list
-                    role.getUsers().remove(this); // Remove the user from the role's list
-                }
+    // Method to add a role to the user
+    public void addRole(Role role) {
+        if (!this.roles.contains(role)) {
+            this.roles.add(role);
+            role.getUsers().add(this);
+        }
+    }
 
-                // Remove a tour from the user
-                public void removeTour(Tour tour) {
-                    this.tours.remove(tour); // Remove the tour from the user's list
-                    tour.getUsers().remove(this); // Remove the user from the tour's list
-                }
+    // Method to add a tour to the user
+    public void addTour(Tour tour) {
+        if (!this.tours.contains(tour)) {
+            this.tours.add(tour);
+            tour.getUsers().add(this);
+        }
+    }
+
+    // Method to remove a role from the user
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+        role.getUsers().remove(this);
+    }
+
+    // Method to remove a tour from the user
+    public void removeTour(Tour tour) {
+        this.tours.remove(tour);
+        tour.getUsers().remove(this);
+    }
 }

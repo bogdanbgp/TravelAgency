@@ -1,9 +1,11 @@
 package com.travelagency.travelagency.service;
 
+import com.travelagency.travelagency.entity.Review;
 import com.travelagency.travelagency.entity.User;
 import com.travelagency.travelagency.entity.Tour;
 import com.travelagency.travelagency.exception.user.UserNotAuthenticatedException;
 import com.travelagency.travelagency.exception.user.UserNotFoundException;
+import com.travelagency.travelagency.repository.ReviewRepository;
 import com.travelagency.travelagency.repository.UserRepository;
 import com.travelagency.travelagency.repository.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +16,49 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImplementations implements UserService {
 
     private final UserRepository userRepository;
     private final TourRepository tourRepository;
+    private final ReviewRepository reviewRepository;
 
     @Autowired
     public UserServiceImplementations(UserRepository userRepository,
-                                      TourRepository tourRepository) {
+                                      TourRepository tourRepository,
+                                      ReviewRepository reviewRepository) {
         this.userRepository = userRepository;
         this.tourRepository = tourRepository;
+        this.reviewRepository = reviewRepository;
+    }
+
+
+    //-----------------------------------------------------------------------------------------------------
+    // REVIEW METHODS:
+
+    // Save a review to the database
+    @Override
+    public Review saveReview(Review review) {
+        return reviewRepository.save(review);  // Save the review to the database
+    }
+
+    // Get all reviews from the database
+    @Override
+    public List<Review> getAllReviews() {
+        return reviewRepository.findAll();  // Fetch all reviews
+    }
+
+    // Delete a review by ID
+    @Override
+    public boolean deleteReview(Long id) {
+        Optional<Review> review = reviewRepository.findById(id);
+        if (review.isPresent()) {
+            reviewRepository.delete(review.get());  // Delete the review from the database
+            return true;  // Review successfully deleted
+        }
+        return false;  // Review not found
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -55,9 +88,4 @@ public class UserServiceImplementations implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
-    // Retrieve all available tours
-    @Override
-    public List<Tour> getAllTours() {
-        return tourRepository.findAll();
-    }
 }

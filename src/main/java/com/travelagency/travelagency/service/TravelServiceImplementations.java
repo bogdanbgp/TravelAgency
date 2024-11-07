@@ -12,7 +12,6 @@ import com.travelagency.travelagency.dto.request.role.AddRoleRequest;
 import com.travelagency.travelagency.dto.request.role.AddRoleToUserRequest;
 import com.travelagency.travelagency.dto.request.role.UpdateRoleRequest;
 import com.travelagency.travelagency.dto.request.tour.AddTourRequest;
-import com.travelagency.travelagency.dto.request.tour.AddTourToUserRequest;
 import com.travelagency.travelagency.dto.request.tour.UpdateTourRequest;
 import com.travelagency.travelagency.dto.request.user.AddUserRequest;
 import com.travelagency.travelagency.dto.request.user.UpdateUserRequest;
@@ -26,6 +25,7 @@ import com.travelagency.travelagency.dto.response.hotel.HotelResponse;
 import com.travelagency.travelagency.dto.response.hotel.UpdateHotelResponse;
 import com.travelagency.travelagency.dto.response.role.RoleResponse;
 import com.travelagency.travelagency.dto.response.role.UpdateRoleResponse;
+import com.travelagency.travelagency.dto.response.tour.AddTourToUserResponse;
 import com.travelagency.travelagency.dto.response.tour.TourResponse;
 import com.travelagency.travelagency.dto.response.tour.UpdateTourResponse;
 import com.travelagency.travelagency.dto.response.user.UpdateUserResponse;
@@ -93,6 +93,8 @@ public class TravelServiceImplementations implements TravelService {
         this.airportMapper = airportMapper;
         this.hotelMapper = hotelMapper;
     }
+
+
 //-----------------------------------------------------------------------------------------------------
     // ROLE-RELATED METHODS
 
@@ -142,11 +144,37 @@ public class TravelServiceImplementations implements TravelService {
                     roleRepository.deleteById(id);
                 }
 
+                // USER-ROLE RELATED METHODS:
+
+                @Override
+                public User addRoleToUser(AddRoleToUserRequest addRoleToUserRequest) {
+                    User user = userRepository.findById(addRoleToUserRequest.getUserId())
+                            .orElseThrow(() -> new UserNotFoundException("User with ID " + addRoleToUserRequest.getUserId() + " not found"));
+
+                    Role role = roleRepository.findById(addRoleToUserRequest.getRoleId())
+                            .orElseThrow(() -> new RoleNotFoundException("Role with ID " + addRoleToUserRequest.getRoleId() + " not found"));
+
+                    user.addRole(role);
+                    return userRepository.save(user);
+                }
+
+                @Override
+                public void removeRoleFromUser(Long userId, Long roleId) {
+                    User user = userRepository.findById(userId)
+                            .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
+
+                    Role role = roleRepository.findById(roleId)
+                            .orElseThrow(() -> new RoleNotFoundException("Role with ID " + roleId + " not found"));
+
+                    user.removeRole(role);
+                    userRepository.save(user);
+                }
+
+
 //-----------------------------------------------------------------------------------------------------
 
     // TOUR-RELATED METHODS:
 
-    // Add Tour
     @Override
     public TourResponse addTour(AddTourRequest addTourRequest) {
         // Check if a tour with the same name already exists
@@ -187,18 +215,18 @@ public class TravelServiceImplementations implements TravelService {
         Tour savedTour = tourRepository.save(tour);
         return tourMapper.toResponse(savedTour);
     }
+
                 @Override
                 public List<Tour> findAllTours() {
-                    // This method retrieves and returns a list of all tours from the tourRepository.
                     return tourRepository.findAll();
                 }
+
                 @Override
                 public Tour getTourById(Long id) {
-                    // This method retrieves a specific tour by its ID.
-                    // If the tour with the provided ID is not found, it throws a TourNotFoundException.
                     return tourRepository.findById(id)
                             .orElseThrow(() -> new TourNotFoundException("Tour not found for ID: " + id));
                 }
+
                 @Override
                 public UpdateTourResponse updateTour(Long id, UpdateTourRequest updateTourRequest) {
                     Tour existingTour = tourRepository.findById(id)
@@ -208,43 +236,88 @@ public class TravelServiceImplementations implements TravelService {
                     Tour updatedTour = tourRepository.save(existingTour);
                     return tourMapper.toUpdateResponse(updatedTour);
                 }
+
                 @Override
                 public void deleteTourById(Long id) {
-                    // Check if the user exists before deletion
                     if (!tourRepository.existsById(id)) {
                         throw new TourNotFoundException("Tour not found for ID: " + id);
                     }
                     tourRepository.deleteById(id);
                 }
 
+                @Override
+                public void bookTourForUser(Long userId, Long tourId) {
+                    User user = getUserById(userId);
+                    Tour tour = getTourById(tourId);
+
+                    user.addTour(tour);
+                    userRepository.save(user);
+                }
+
+                @Override
+                public AddTourToUserResponse addTourToUser(Long userId, Long tourId) {
+                    User user = userRepository.findById(userId)
+                            .orElseThrow(() -> new UserNotFoundException("User not found"));
+                    Tour tour = tourRepository.findById(tourId)
+                            .orElseThrow(() -> new TourNotFoundException("Tour not found"));
+
+                    user.addTour(tour);
+                    userRepository.save(user);
+
+                    return new AddTourToUserResponse(
+                            user.getId(),
+                            user.getFullName(),
+                            tour.getId(),
+                            tour.getTourName(),
+                            "Tour added successfully"
+                    );
+                }
+
+                @Override
+                public List<Tour> findToursForUser(Long userId) {
+                    User user = userRepository.findById(userId)
+                            .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+                    return tourRepository.findByUserId(userId);
+                }
+
+                @Override
+                public void removeTourFromUser(Long userId, Long tourId) {
+                    User user = userRepository.findById(userId)
+                            .orElseThrow(() -> new UserNotFoundException("User not found"));
+                    Tour tour = tourRepository.findById(tourId)
+                            .orElseThrow(() -> new TourNotFoundException("Tour not found"));
+
+                    user.removeTour(tour);
+                    userRepository.save(user);
+                }
+
 // -------------------------------------------------------------------------------------------------------------
 
-    // USER-RELATED METHODS:
+// USER-RELATED METHODS:
 
     @Override
     public UserResponse addUser(AddUserRequest addUserRequest) {
-        // Check for existing user by email
         Optional<User> existingUserByEmail = userRepository.findUserByEmail(addUserRequest.getEmail());
         if (existingUserByEmail.isPresent()) {
             throw new UserAlreadyExistsException("A user with this email already exists");
         }
-        // Check for existing user by username
         Optional<User> existingUserByUsername = userRepository.findUserByUsername(addUserRequest.getUsername());
         if (existingUserByUsername.isPresent()) {
             throw new UserAlreadyExistsException("A user with this username already exists");
         }
-        // Convert AddUserRequest to User entity
+
         User user = userMapper.fromRequest(addUserRequest);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(addUserRequest.getPassword());
         user.setPassword(hashedPassword);
-        // Set default role if none provided
+
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
             Role userRole = roleRepository.findRoleByRoleName("USER")
                     .orElseThrow(() -> new RoleNotFoundException("Default role 'USER' does not exist."));
             user.getRoles().add(userRole);
         }
-        // Add specified roles by IDs
+
         if (addUserRequest.getRoleIds() != null && !addUserRequest.getRoleIds().isEmpty()) {
             for (Long roleId : addUserRequest.getRoleIds()) {
                 Role fetchedRole = roleRepository.findById(roleId)
@@ -252,7 +325,7 @@ public class TravelServiceImplementations implements TravelService {
                 user.getRoles().add(fetchedRole);
             }
         }
-        // Add specified tours by IDs
+
         if (addUserRequest.getTourIds() != null && !addUserRequest.getTourIds().isEmpty()) {
             List<Tour> tours = new ArrayList<>();
             for (Long tourId : addUserRequest.getTourIds()) {
@@ -265,24 +338,26 @@ public class TravelServiceImplementations implements TravelService {
         User savedUser = userRepository.save(user);
         return userMapper.toResponse(savedUser);
     }
+
                 @Override
                 public List<UserResponse> findAllUsers() {
                     return userRepository.findAll().stream()
                             .map(userMapper::toResponse)
                             .collect(Collectors.toList());
                 }
+
                 @Override
-                public UserResponse getUserById(Long id) {
-                    User user = userRepository.findById(id)
+                public User getUserById(Long id) {
+                    return userRepository.findById(id)
                             .orElseThrow(() -> new UserNotFoundException("User not found for ID: " + id));
-                    return userMapper.toResponse(user);
                 }
+
                 @Override
                 public UpdateUserResponse updateUser(Long id, UpdateUserRequest updateUserRequest) {
                     User existingUser = userRepository.findById(id)
                             .orElseThrow(() -> new UserNotFoundException("User not found"));
                     userMapper.fromUpdateRequest(updateUserRequest, existingUser);
-                    // Update password if provided
+
                     if (updateUserRequest.getPassword() != null && !updateUserRequest.getPassword().isEmpty()) {
                         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
                         String hashedPassword = passwordEncoder.encode(updateUserRequest.getPassword());
@@ -291,80 +366,21 @@ public class TravelServiceImplementations implements TravelService {
                     User updatedUser = userRepository.save(existingUser);
                     return userMapper.toUpdateResponse(updatedUser);
                 }
+
                 @Override
                 public void deleteUserById(Long id) {
                     User user = userRepository.findById(id)
                             .orElseThrow(() -> new UserNotFoundException("User not found for ID: " + id));
-                    // Clear associations first if necessary
+
                     for (Tour tour : user.getTours()) {
                         tour.getUsers().remove(user);
                     }
                     for (Role role : user.getRoles()) {
                         role.getUsers().remove(user);
                     }
-                    // Finally, delete the user
                     userRepository.delete(user);
                 }
 
-// -------------------------------------------------------------------------------------------------------------
-
-    // USER-ROLE RELATED METHODS:
-
-    @Override
-    public User addRoleToUser(AddRoleToUserRequest addRoleToUserRequest) {
-        // Find user by ID, throw exception if not found
-        User user = userRepository.findById(addRoleToUserRequest.getUserId())
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + addRoleToUserRequest.getUserId() + " not found"));
-        // Find role by ID, throw exception if not found
-        Role role = roleRepository.findById(addRoleToUserRequest.getRoleId())
-                .orElseThrow(() -> new RoleNotFoundException("Role with ID " + addRoleToUserRequest.getRoleId() + " not found"));
-        // Add role to the user and save
-        user.addRole(role);
-        return userRepository.save(user);
-    }
-                @Override
-                public void removeRoleFromUser(Long userId, Long roleId) {
-                    // Find user by ID, throw exception if not found
-                    User user = userRepository.findById(userId)
-                            .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
-                    // Find role by ID, throw exception if not found
-                    Role role = roleRepository.findById(roleId)
-                            .orElseThrow(() -> new RoleNotFoundException("Role with ID " + roleId + " not found"));
-                    // Remove role from user
-                    user.removeRole(role);
-                    // Save the user to persist the changes
-                    userRepository.save(user);
-                }
-
-// -------------------------------------------------------------------------------------------------------------
-
-    // USER-TOUR RELATED METHODS:
-
-    @Override
-    public User addTourToUser(AddTourToUserRequest addTourToUserRequest) {
-        // Find user by ID, throw exception if not found
-        User user = userRepository.findById(addTourToUserRequest.getUserId())
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + addTourToUserRequest.getUserId() + " not found"));
-        // Find tour by ID, throw exception if not found
-        Tour tour = tourRepository.findById(addTourToUserRequest.getTourId())
-                .orElseThrow(() -> new TourNotFoundException("Tour with ID " + addTourToUserRequest.getTourId() + " not found"));
-        // Add the tour to the user's list
-        user.addTour(tour);
-        return userRepository.save(user);
-    }
-                @Override
-                public void removeTourFromUser(Long userId, Long tourId) {
-                    // Find user by ID, throw exception if not found
-                    User user = userRepository.findById(userId)
-                            .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
-                    // Find tour by ID, throw exception if not found
-                    Tour tour = tourRepository.findById(tourId)
-                            .orElseThrow(() -> new TourNotFoundException("Tour with ID " + tourId + " not found"));
-                    // Remove tour from user
-                    user.removeTour(tour);
-                    // Save the user to persist the changes
-                    userRepository.save(user);
-                }
 
 // -------------------------------------------------------------------------------------------------------------
 

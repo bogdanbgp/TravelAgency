@@ -20,9 +20,6 @@ public class UpdateTourRequest {
     @NotNull(message = "Return date should not be null")
     private LocalDate returnDate; // Using LocalDate
 
-    @NotNull(message = "Number of days should not be null")
-    private int numberOfDays;
-
     private String description;
 
     @NotNull(message = "Price should not be null")

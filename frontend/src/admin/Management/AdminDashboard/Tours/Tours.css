@@ -1,113 +1,265 @@
 /* Tours container styles */
 .tours-container {
-  font-family: 'Arial', sans-serif;
-  color: #333;
-  padding: 20px;
-  max-width: 1200px; /* Similar to users */
-  margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* Header section */
 .tours-header {
-  text-align: center;
-  background: linear-gradient(45deg, #1abc9c, #f1c40f); /* Green and yellow gradient */
-  color: white;
-  padding: 40px 20px;
-  border-radius: 10px;
-  margin-bottom: 40px;
+    text-align: center;
+    background: linear-gradient(45deg, #1abc9c, #f1c40f); /* Green and yellow gradient */
+    color: white;
+    padding: 40px 20px;
+    border-radius: 10px;
+    margin-bottom: 40px;
 }
 
 .tours-header h1 {
-  font-size: 3em;
-  margin: 0;
+    font-size: 3em;
+    margin: 0;
 }
 
-/* Tour list styles */
+/* Tours list styles */
 .tour-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 20px 0;
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
 }
 
 .tour-item {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  margin: 10px 0;
-  cursor: pointer; /* Pointer cursor for clickable items */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background-color 0.3s ease;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.tour-item:hover {
-  background-color: #f9f9f9; /* Light background on hover */
+.tour-details {
+    flex-grow: 1;
+    color: #555;
+}
+
+/* Button styles */
+.tour-item__update-button,
+.tour-item__delete-button,
+.add-tour-button {
+    background-color: #e74c3c; /* Bright red */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tour-item__update-button {
+    background-color: #3498db; /* Blue for update */
+}
+
+.tour-item__update-button:hover {
+    background-color: #2980b9; /* Darker blue for hover */
+}
+
+.tour-item__delete-button {
+    background-color: #dc3545; /* Bootstrap red for delete */
+}
+
+.tour-item__delete-button:hover {
+    background-color: #c82333; /* Darker red for delete */
 }
 
 /* Form styles */
 .add-tour-form,
 .update-tour-form {
-  background-color: #ecf0f1; /* Light background for the form */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
-  display: flex; /* Enable flexbox */
-  flex-direction: column; /* Stack children vertically */
-  align-items: center; /* Center items horizontally */
+    background-color: #ecf0f1; /* Light background for the form */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    display: flex; /* Enable flexbox */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center items horizontally */
 }
 
 /* Input field styles */
-.form-input {
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1em;
-  width: 80%; /* Adjust width to fit better */
-  max-width: 400px; /* Maximum width for larger screens */
+.form-input,
+.form-textarea,
+.form-select {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 80%; /* Adjust width to fit better */
+    max-width: 400px; /* Maximum width for larger screens */
 }
 
-.form-input:focus {
-  border-color: #3498db; /* Focused input border color */
-  outline: none;
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+    border-color: #3498db; /* Focused input border color */
+    outline: none;
 }
 
 /* Submit button styles */
-.submit-button {
-  background-color: #e74c3c; /* Bright red */
-  color: white;
-  padding: 15px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.2em;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  display: block; /* Make button a block element */
-  margin: 20px auto; /* Center horizontally */
-  width: 50%; /* Optional: Adjust width as needed */
-  text-align: center; /* Center text within button */
+.form-submit-button {
+    background-color: #e74c3c; /* Red for submit */
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 20px auto; /* Center horizontally */
+    width: 50%; /* Optional: Adjust width as needed */
+    text-align: center;
 }
 
-.submit-button:hover {
-  background-color: #c82333; /* Darker red for hover */
+.form-submit-button:hover {
+    background-color: #c82333; /* Darker red for hover */
+}
+
+.create-tour-button {
+    background-color: #e74c3c; /* Bright red */
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block; /* Make button a block element */
+    margin: 20px auto; /* Center horizontally */
+    width: 50%; /* Optional: Adjust width as needed */
+    text-align: center; /* Center text within button */
+}
+
+.create-tour-button:hover {
+   background-color: #c82333; /* Darker red for hover */
+}
+
+.update-tour-button {
+    background-color: #e74c3c; /* Bright red */
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block; /* Make button a block element */
+    margin: 20px auto; /* Center horizontally */
+    width: 50%; /* Optional: Adjust width as needed */
+    text-align: center; /* Center text within button */
+   }
+
+.update-tour-button:hover {
+    background-color: #c82333; /* Darker red for hover */
+}
+
+/* Cancel button styles */
+.cancel-update-button {
+    background-color: #95a5a6; /* Light gray background for cancel */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 10px; /* Add some space between buttons */
+}
+
+.cancel-update-button:hover {
+    background-color: #7f8c8d; /* Darker gray for hover effect */
+}
+
+.cancel-update-button:focus {
+    outline: none; /* Remove default focus outline */
+}
+
+/* Error and success messages */
+.error-message,
+.success-message {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.error-message {
+    color: red;
+}
+
+.success-message {
+    color: green;
+}
+
+/* Tour select dropdown */
+.tour-select-dropdown {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 400px;
+}
+
+.tour-actions__add-button {
+    background-color: #3498db; /* Blue for add tour to user */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tour-actions__add-button:hover {
+    background-color: #2980b9; /* Darker blue for add tour to user */
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .tours-header h1 {
-    font-size: 2.5em;
-  }
+    .tours-header h1 {
+        font-size: 2.5em;
+    }
 
-  .add-tour-form,
-  .update-tour-form {
-    padding: 15px;
-  }
+    .add-tour-form,
+    .update-tour-form {
+        padding: 15px;
+    }
 
-  .tour-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+    .tour-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tour-item button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .tour-select-dropdown {
+        width: 100%; /* Full width on smaller screens */
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+        width: 100%; /* Full width on smaller screens */
+    }
+
+    .form-submit-button {
+        width: 100%; /* Full width for submit button */
+    }
 }

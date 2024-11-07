@@ -17,12 +17,12 @@ import com.travelagency.travelagency.dto.request.hotel.UpdateHotelRequest;
 import com.travelagency.travelagency.dto.response.hotel.HotelResponse;
 import com.travelagency.travelagency.dto.response.hotel.UpdateHotelResponse;
 import com.travelagency.travelagency.dto.request.role.AddRoleRequest;
-import com.travelagency.travelagency.dto.request.role.AddRoleToUserRequest;
 import com.travelagency.travelagency.dto.request.role.UpdateRoleRequest;
 import com.travelagency.travelagency.dto.response.role.RoleResponse;
 import com.travelagency.travelagency.dto.response.role.UpdateRoleResponse;
 import com.travelagency.travelagency.dto.request.tour.AddTourRequest;
 import com.travelagency.travelagency.dto.request.tour.UpdateTourRequest;
+import com.travelagency.travelagency.dto.response.tour.AddTourToUserResponse;
 import com.travelagency.travelagency.dto.response.tour.TourResponse;
 import com.travelagency.travelagency.dto.response.tour.UpdateTourResponse;
 import com.travelagency.travelagency.dto.request.user.AddUserRequest;
@@ -30,11 +30,6 @@ import com.travelagency.travelagency.dto.request.user.UpdateUserRequest;
 import com.travelagency.travelagency.dto.response.user.UserResponse;
 import com.travelagency.travelagency.dto.response.user.UpdateUserResponse;
 import com.travelagency.travelagency.entity.Role;
-import com.travelagency.travelagency.entity.User;
-import com.travelagency.travelagency.entity.Airport;
-import com.travelagency.travelagency.entity.Country;
-import com.travelagency.travelagency.entity.City;
-import com.travelagency.travelagency.entity.Hotel;
 import com.travelagency.travelagency.exception.role.RoleNotFoundException;
 import com.travelagency.travelagency.exception.tour.*;
 import com.travelagency.travelagency.exception.user.UserNotFoundException;
@@ -146,28 +141,48 @@ public class TravelController {
                 .stream()
                 .map(tourMapper::toResponse)
                 .toList();
-        return ResponseEntity.ok(tourResponses); // Returns 200 OK with the list of tours
+        return ResponseEntity.ok(tourResponses);
     }
 
     @PostMapping("/tours")
     public ResponseEntity<TourResponse> createTour(@RequestBody AddTourRequest addTourRequest) {
-        TourResponse tourResponse = service.addTour(addTourRequest); // Directly call the service method that returns TourResponse
-        return ResponseEntity.status(HttpStatus.CREATED).body(tourResponse); // Returns 201 Created with the new tour
+        TourResponse tourResponse = service.addTour(addTourRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(tourResponse);
+    }
+
+    @GetMapping("/tours/{id}")
+    public ResponseEntity<TourResponse> getTourById(@PathVariable Long id) {
+        TourResponse tourResponse = tourMapper.toResponse(service.getTourById(id));
+        return ResponseEntity.ok(tourResponse);
     }
 
     @PutMapping("/tours/{id}")
     public ResponseEntity<UpdateTourResponse> updateTour(@PathVariable Long id, @RequestBody UpdateTourRequest updateTourRequest) {
         UpdateTourResponse updateTourResponse = service.updateTour(id, updateTourRequest);
-        return ResponseEntity.ok(updateTourResponse); // Returns 200 OK with the updated tour
+        return ResponseEntity.ok(updateTourResponse);
     }
 
     @DeleteMapping("/tours/{id}")
     public ResponseEntity<Void> deleteTour(@PathVariable Long id) {
         try {
             service.deleteTourById(id);
-            return ResponseEntity.noContent().build(); // Returns 204 No Content after successful deletion
+            return ResponseEntity.noContent().build();
         } catch (TourNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Returns 404 Not Found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("/{userId}/tours/{tourId}")
+    public ResponseEntity<String> bookTourForUser(
+            @PathVariable Long userId,
+            @PathVariable Long tourId) {
+        try {
+            service.bookTourForUser(userId, tourId);
+            return ResponseEntity.ok("Tour booked successfully!");
+        } catch (UserNotFoundException | TourNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error booking tour: " + e.getMessage());
         }
     }
 
@@ -187,6 +202,45 @@ public class TravelController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
+    @GetMapping("/users/{userId}/tours")
+    public ResponseEntity<List<TourResponse>> getToursForUser(@PathVariable Long userId) {
+        List<TourResponse> tourResponses = service.findToursForUser(userId)
+                .stream()
+                .map(tourMapper::toResponse)
+                .toList();
+        return ResponseEntity.ok(tourResponses);
+    }
+
+    @PostMapping("/users/{userId}/tours/{tourId}")
+    public ResponseEntity<AddTourToUserResponse> addTourToUser(
+            @PathVariable Long userId,
+            @PathVariable Long tourId) {
+        try {
+            AddTourToUserResponse response = service.addTourToUser(userId, tourId);
+            return ResponseEntity.ok(response);
+        } catch (UserNotFoundException | TourNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new AddTourToUserResponse(userId, null, tourId, null, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new AddTourToUserResponse(userId, null, tourId, null, "Failed to add tour to user"));
+        }
+    }
+
+    @DeleteMapping("/users/{userId}/tours/{tourId}")
+    public ResponseEntity<Void> removeTourFromUser(
+            @PathVariable Long userId,
+            @PathVariable Long tourId) {
+        try {
+            service.removeTourFromUser(userId, tourId);
+            return ResponseEntity.noContent().build();
+        } catch (TourNotFoundException | UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
     @PutMapping("/users/{id}")
     public ResponseEntity<UpdateUserResponse> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest updateUserRequest) {
         UpdateUserResponse updateUserResponse = service.updateUser(id, updateUserRequest);
@@ -197,11 +251,11 @@ public class TravelController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         try {
             service.deleteUserById(id);
-            return ResponseEntity.noContent().build(); // Returns 204 No Content after successful deletion
+            return ResponseEntity.noContent().build();
         } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Returns 404 Not Found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // Returns 409 Conflict if the user can't be deleted
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 

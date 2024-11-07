@@ -16,8 +16,6 @@ public class TourResponse {
     private LocalDate departureDate; // Changed to LocalDate
     private LocalDate returnDate; // Changed to LocalDate
 
-    private int numberOfDays;
-
     private String description;
 
     private double price;

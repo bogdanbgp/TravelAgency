@@ -1,9 +1,9 @@
 /* Users container styles */
-.users-container {
+.users-management-container {
     font-family: 'Arial', sans-serif;
     color: #333;
     padding: 20px;
-    max-width: 1200px; /* Similar to tours */
+    max-width: 1200px; /* Container width */
     margin: 0 auto;
 }
 
@@ -22,19 +22,14 @@
     margin: 0;
 }
 
-/* Centered labels for forms */
-h3 {
-    text-align: center; /* Center the headings */
-}
-
-/* User list styles */
-.user-list {
+/* Users list styles */
+.users-list {
     list-style-type: none;
     padding: 0;
     margin: 20px 0;
 }
 
-.user-item {
+.user-list-item {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -45,15 +40,16 @@ h3 {
     align-items: center;
 }
 
-.user-info {
+.user-details {
     flex-grow: 1;
     color: #555;
 }
 
 /* Button styles */
-.update-button,
-.delete-button,
-.submit-button {
+.user-list-item__update-button,
+.user-list-item__delete-button,
+.add-user-button,
+.update-user-button {
     background-color: #e74c3c; /* Bright red */
     color: white;
     padding: 10px 15px;
@@ -64,25 +60,26 @@ h3 {
     transition: background-color 0.3s ease;
 }
 
-.update-button {
+.user-list-item__update-button {
     background-color: #3498db; /* Blue for update */
+    margin-right: 10px; /* Adds space between Update and Delete buttons */
 }
 
-.update-button:hover {
+.user-list-item__update-button:hover {
     background-color: #2980b9; /* Darker blue for hover */
 }
 
-.delete-button {
+.user-list-item__delete-button {
     background-color: #dc3545; /* Bootstrap red for delete */
 }
 
-.delete-button:hover {
+.user-list-item__delete-button:hover {
     background-color: #c82333; /* Darker red for delete */
 }
 
 /* Form styles */
 .add-user-form,
-.update-user-form { /* Change update-form to update-user-form */
+.update-user-form {
     background-color: #ecf0f1; /* Light background for the form */
     padding: 20px;
     border-radius: 10px;
@@ -110,7 +107,8 @@ h3 {
 }
 
 /* Submit button styles */
-.submit-button {
+.add-user-button,
+.update-user-button {
     background-color: #e74c3c; /* Bright red */
     color: white;
     padding: 15px 20px;
@@ -125,38 +123,122 @@ h3 {
     text-align: center; /* Center text within button */
 }
 
-.submit-button:hover {
+.add-user-button:hover,
+.update-user-button:hover {
     background-color: #c82333; /* Darker red for hover */
 }
 
-/* Message styles */
+/* Cancel button styles */
+.cancel-update-button {
+    background-color: #95a5a6; /* Light gray background for cancel */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 10px; /* Add some space between buttons */
+}
+
+.cancel-update-button:hover {
+    background-color: #7f8c8d; /* Darker gray for hover effect */
+}
+
+.cancel-update-button:focus {
+    outline: none; /* Remove default focus outline */
+}
+
 .error-message {
     color: red;
     margin-top: 10px;
     font-weight: bold;
-    text-align: center; /* Center the error message */
 }
 
 .success-message {
     color: green;
     margin-top: 10px;
     font-weight: bold;
-    text-align: center; /* Center the success message */
 }
 
-/* User list button styles */
-.user-item button {
-    background-color: #e74c3c; /* Bright red */
+/* User tours styles */
+.update-user-container {
+    margin-top: 40px;
+}
+
+.user-tours-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.tour-list-item {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tour-actions__remove-button {
+    background-color: #dc3545; /* Red for remove */
     color: white;
+    padding: 10px;
     border: none;
     border-radius: 5px;
-    padding: 10px 15px;
+    font-size: 1em;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.user-item button:hover {
-    background-color: #3498db; /* Bright blue for hover effect */
+.tour-actions__remove-button:hover {
+    background-color: #c82333; /* Darker red for remove */
+}
+
+.section-title {
+    text-align: center;
+    font-size: 1.5em; /* Optional: adjust the font size as desired */
+    margin-top: 20px; /* Optional: add some space above */
+}
+
+/* add tour to user section */
+.tour-selection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tour-select-dropdown {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 400px;
+}
+
+.tour-actions__add-button {
+    background-color: #3498db; /* Blue for add tour to user */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tour-actions__add-button:hover {
+    background-color: #2980b9; /* Darker blue for add tour to user */
+}
+
+.tour-selection-container button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
 }
 
 /* Responsive design */
@@ -170,13 +252,25 @@ h3 {
         padding: 15px;
     }
 
-    .user-item {
+    .user-list-item {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .user-item button {
+    .user-list-item button {
         width: 100%;
         margin-top: 10px;
+    }
+
+    .tour-selection-container {
+        width: 100%;
+    }
+
+    .form-input {
+        width: 100%; /* Full width on smaller screens */
+    }
+
+    .submit-button {
+        width: 100%; /* Full width for submit button */
     }
 }

@@ -168,7 +168,7 @@ public class AuthServiceImplementations implements AuthService {
 
                         // Check if the user has the 'SUPER_ADMIN' role
                         if (userDetails.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("SUPER_ADMIN"))) {
-                            throw new AuthenticationFailedException("Authentication failed: SuperAdmins can not login using this form.");
+                            throw new AuthenticationFailedException("Authentication failed: SuperAdmins cannot login using this form.");
                         }
 
                         // Verify the password
@@ -180,12 +180,14 @@ public class AuthServiceImplementations implements AuthService {
                         HttpSession session = request.getSession();
                         session.setAttribute("user", userDetails.getUsername());
 
-                        // Create and return the response for user login
-                        User user = new User(); // Assuming you want to create a User instance for the response
-                        user.setUsername(userDetails.getUsername()); // Set the username
-                        return loginMapper.toResponse(user); // Map to LoginResponse
-                    }
+                        // Retrieve the user entity from the database using the username
+                        User user = userRepository.findUserByUsername(userDetails.getUsername())
+                                .orElseThrow(() -> new AuthenticationFailedException("Authentication failed: User not found."));
 
+                        // Create and return the response for user login
+                        LoginResponse loginResponse = loginMapper.toResponse(user); // Now includes ID
+                        return loginResponse; // Return the login response with ID and username
+                    }
 
     // --------------------------------------------------------------------------------------------------------------
 

@@ -276,4 +276,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return buildResponseEntity(apiError);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneralException(Exception ex) {
+        return new ResponseEntity<>("An error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
