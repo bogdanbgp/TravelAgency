@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class UpdateCityResponse {
     private Long id;
     private String cityName;
-    private String countryName; // Include country name if needed
+    private String countryName;
 }

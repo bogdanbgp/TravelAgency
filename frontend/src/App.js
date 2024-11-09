@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Navbar from './components/Navbar/Navbar';
 import Bye from './components/Bye/Bye';
 import NotFound from './components/NotFound/NotFound';
-import Profile from './components/Profile/Profile';  // Import the Profile component
 import Review from './pages/Review/Review'; // Import Review component
 import ReadReviews from './pages/Review/ReadReviews'; // Import ReadReviews component
 
@@ -81,9 +80,6 @@ function App() {
 
           {/* Review Route - Only for Logged-in Users */}
           <Route path="/review" element={user ? <Review /> : <Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
-
-          {/* User Profile Route - Protected */}
-          <Route path="/profile" element={user ? <Profile /> : <Navigate to="/login" />} />  {/* Redirect to login if not authenticated */}
 
           {/* Miscellaneous Routes */}
           <Route path="/bye" element={<Bye />} />

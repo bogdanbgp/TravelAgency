@@ -62,30 +62,30 @@ public class UserServiceImplementations implements UserService {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Utility method to retrieve the currently authenticated user's ID
-    @Override
-    public Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return userRepository.findUserByUsername(userDetails.getUsername())
-                    .map(User::getId)
-                    .orElseThrow(() -> new UserNotFoundException("User not found"));
-        }
-        throw new UserNotAuthenticatedException("User is not authenticated");
-    }
-
-    // Retrieve the currently authenticated user
-    @Override
-    public User getCurrentUser() {
-        Long userId = getCurrentUserId(); // Retrieve authenticated user's ID
-        // Check if the userId is null or invalid
-        if (userId == null) {
-            throw new UserNotAuthenticatedException("User is not authenticated");
-        }
-
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-    }
+//    // Utility method to retrieve the currently authenticated user's ID
+//    @Override
+//    public Long getCurrentUserId() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//            return userRepository.findUserByUsername(userDetails.getUsername())
+//                    .map(User::getId)
+//                    .orElseThrow(() -> new UserNotFoundException("User not found"));
+//        }
+//        throw new UserNotAuthenticatedException("User is not authenticated");
+//    }
+//
+//    // Retrieve the currently authenticated user
+//    @Override
+//    public User getCurrentUser() {
+//        Long userId = getCurrentUserId(); // Retrieve authenticated user's ID
+//        // Check if the userId is null or invalid
+//        if (userId == null) {
+//            throw new UserNotAuthenticatedException("User is not authenticated");
+//        }
+//
+//        return userRepository.findById(userId)
+//                .orElseThrow(() -> new UserNotFoundException("User not found"));
+//    }
 
 }

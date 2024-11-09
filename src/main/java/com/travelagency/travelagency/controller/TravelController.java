@@ -86,11 +86,6 @@ public class TravelController {
         return ResponseEntity.ok("Welcome to the Travel Agency!");
     }
 
-    @GetMapping("/hello")  // Define a GET endpoint
-    public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("Hello, world!");
-    }
-
     @GetMapping("/bye")  // Define a GET endpoint
     public ResponseEntity<String> bye() {
         return ResponseEntity.ok("Bye!");
@@ -186,22 +181,6 @@ public class TravelController {
         }
     }
 
-    // ========================================================================================================
-    // User Endpoints
-    // ========================================================================================================
-
-    @GetMapping("/users")
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> userResponses = service.findAllUsers();
-        return ResponseEntity.ok(userResponses);
-    }
-
-    @PostMapping("/users")
-    public ResponseEntity<UserResponse> createUser(@RequestBody AddUserRequest addUserRequest) {
-        UserResponse userResponse = service.addUser(addUserRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
-    }
-
     @GetMapping("/users/{userId}/tours")
     public ResponseEntity<List<TourResponse>> getToursForUser(@PathVariable Long userId) {
         List<TourResponse> tourResponses = service.findToursForUser(userId)
@@ -239,6 +218,23 @@ public class TravelController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+
+    // ========================================================================================================
+    // User Endpoints
+    // ========================================================================================================
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        List<UserResponse> userResponses = service.findAllUsers();
+        return ResponseEntity.ok(userResponses);
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<UserResponse> createUser(@RequestBody AddUserRequest addUserRequest) {
+        UserResponse userResponse = service.addUser(addUserRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @PutMapping("/users/{id}")

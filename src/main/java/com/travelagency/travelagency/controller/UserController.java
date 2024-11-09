@@ -66,39 +66,21 @@ public class UserController {
         }
     }
 
-// ------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------
 
-                @GetMapping("/testUserFetch")   // http://localhost:8080/api/user/testUserFetch?username=rabbit
-                public ResponseEntity<User> testUserFetch(@RequestParam String username) {
-                    try {
-                        User user = userRepository.findUserByUsername(username)
-                                .orElseThrow(() -> new UserNotFoundException("User not found"));
-                        return ResponseEntity.ok(user);
-                    } catch (Exception e) {
-                        System.err.println("Error fetching user: " + e.getMessage());
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-                    }
-                }
+    @GetMapping("/testUserFetch")   // http://localhost:8080/api/user/testUserFetch?username=rabbit
+    public ResponseEntity<User> testUserFetch(@RequestParam String username) {
+        try {
+            User user = userRepository.findUserByUsername(username)
+                    .orElseThrow(() -> new UserNotFoundException("User not found"));
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            System.err.println("Error fetching user: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
 
     // ------------------------------------------------------------------------------------------------------
-                // Endpoint to get the currently authenticated user's information
-                @GetMapping("/me")
-                public ResponseEntity<UserResponse> getCurrentUserProfile() {
-                    try {
-                        User user = userService.getCurrentUser(); // Fetch authenticated user
-                        UserResponse userResponse = userMapper.toResponse(user); // Map to UserResponse
-                        return ResponseEntity.ok(userResponse); // Return UserResponse object
-                    } catch (UserNotFoundException ex) {
-                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Return 404 if user not found
-                    } catch (Exception ex) {
-                        // Log the exception for debugging
-                        ex.printStackTrace(); // Print the stack trace in the console
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Return 500 for other errors
-                    }
-                }
-
-    // ------------------------------------------------------------------------------------------------------
-
 
 }

@@ -34,7 +34,7 @@ const BookTours = () => {
             }
         } else {
             console.log('No user data found in session storage.');
-            setError('User is not defined. Please log in again.');
+            setError('User is not defined. Please log in as <user> in order to book a tour.');
         }
 
         fetchTours();
@@ -87,7 +87,7 @@ const BookTours = () => {
 
         // Check if user ID is defined
         if (!user || !user.id) {
-            setError('User is not defined. Please log in again.');
+            setError('User is not defined. Please log in as <user> in order to book a tour.');
             return;
         }
 
